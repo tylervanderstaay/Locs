@@ -1,0 +1,9 @@
+.btn-list{
+    display:flex;
+    flex-direction:row;
+}
+
+.liq{
+    width: 80px;
+    height:30px;
+}
