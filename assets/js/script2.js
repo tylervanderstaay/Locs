@@ -1,4 +1,3 @@
-let newEl;
 const categories = {
     alc: {
         rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
@@ -33,6 +32,9 @@ const mix = {
 const alcs = {
     baseliquors: ["Gin", "Vodka", "Whiskey", "Tequila", "Rum", "Brandy"],
     inglist: getIngredients()
+}
+let myMixes = {
+    count:0
 }
 function getIngredients() {
     let ingredients = [];
@@ -106,39 +108,115 @@ function searchIngredient(event) {
     }
     checkLocal(ingredient)
 }
-const lines = {
-    type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
-    category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
-    ingredient: (id, ing) => {
-        return `<button class="filter-item ig" id="${id}" data-ing="${ing}">${ing}
-    </button>`}
-}
-
-//This block below iterates through our categories object at the top looping first through the two main [types],
-// [type]-> [category] -> [ingredients].
-//Each of these are creating nested <divs> in the order of the initial object. 
-//type <class="f-type" id="[category]"
-//category <class="f-cat" id="[category]">
-//ingredient <button class=f-item (was f-ing...) id="[category][ingIndex]"> ingIndex is determined in the for loop by increasing an external ingCount.
-// Depending where we are in crawling through our categories object, we call to lines[where] and..
-// append the div returned to .btn-list for the type (alc,non-alc), category(GPT sorted Object based on "idk beverage types") into the type, ingredient into category.
-Object.keys(categories).forEach((type) => {
-    console.log(lines.type(type))
-    let elType = $(lines.type(type))
-    elType.appendTo('.btn-list')
-    Object.keys(categories[type]).forEach((category) => {
-        let elCat = $(lines.category(category))
-        elCat.appendTo(`#${type}`)
-        let ingCount = 0;
-        categories[type][category].forEach((ingredient) => {
-            let elIng = $(lines.ingredient(`${category}${ingCount}`, ingredient))
-            elIng.appendTo(`#${category}`)
-            ingCount++
+function createFilterButtons() {
+    const lines = {
+        type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
+        category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
+        ingredient: (id, ing) => {
+            return `<button class="filter-item ig" id="${id}" data-ing="${ing}">${ing}
+        </button>`}
+    }
+    //This block below iterates through our categories object at the top looping first through the two main [types],
+    // [type]-> [category] -> [ingredients].
+    //Each of these are creating nested <divs> in the order of the initial object. 
+    //type <class="f-type" id="[category]"
+    //category <class="f-cat" id="[category]">
+    //ingredient <button class=f-item (was f-ing...) id="[category][ingIndex]"> ingIndex is determined in the for loop by increasing an external ingCount.
+    // Depending where we are in crawling through our categories object, we call to lines[where] and..
+    // append the div returned to .btn-list for the type (alc,non-alc), category(GPT sorted Object based on "idk beverage types") into the type, ingredient into category.
+    Object.keys(categories).forEach((type) => {
+        console.log(lines.type(type))
+        let elType = $(lines.type(type))
+        elType.appendTo('.btn-list') //change to filter-box element selector
+        Object.keys(categories[type]).forEach((category) => {
+            let elCat = $(lines.category(category))
+            elCat.appendTo(`#${type}`)
+            let ingCount = 0;
+            categories[type][category].forEach((ingredient) => {
+                let elIng = $(lines.ingredient(`${category}${ingCount}`, ingredient))
+                elIng.appendTo(`#${category}`)
+                ingCount++
+            })
         })
     })
-})
+}
+function handleFilterClick(event){
+    const id=event.target.id
+    const ingredient=event.target.dataset.ing
+
+    function toggleChoice(id, newIds) {
+        states = ['ig', 'in', 'ex']
+        const target = $(`#${id}`)
+        var classList = target.attr('class').split(/\s+/);
+        let currInd = states.indexOf(classList[1])
+        target.removeClass(states[currInd])
+        if (currInd === 2) {
+            currInd = 0
+        } else {
+            currInd++
+        }
+        target.addClass(states[currInd])
+    }
+    function searchIngredient(ingredient) {
+        function checkLocal(search) {
+            if (localStorage.getItem(search) !== null) {
+                console.log('STORAGE')
+                return JSON.parse(localStorage.getItem(search))
+            } else {
+                console.log('FETCHING')
+                return fetchData(search)
+            }
+        }
+        function fetchData(search) {
+            let ids = []
+            let thisData = [];
+            const options = { method: "GET" };
+            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+                    response.drinks.forEach((item) => {
+                        let id = item.idDrink
+                        let thisObj = {
+                            name: item.strDrink,
+                            img: item.strDrinkThumb
+                        }
+                        thisData.push({ [id]: thisObj })
+                        console.log(item)
+                        ids.push(item.idDrink)
+                    })
+                    localStorage.setItem(search, JSON.stringify(ids))
+                    const oldData = JSON.parse(localStorage.getItem('idData'))
+                    if (oldData !== null) {
+    
+                    }
+                    return response
+                })
+                .catch(err => console.error(err));
+        }
+        checkLocal(ingredient)
+    }
+
+    newChoices = searchIngredient(ingredient)
+    toggleChoice(id, newChoices)
+    
+}
+
+
+
 
 getIngredients()
+createFilterButtons()
 
-$('.filter-item').click(toggleChoice)
-$('.filter-item').click(searchIngredient)
+function objectTest(event){
+    console.log(event.target.id)
+    const newMix = new Object(mix);
+    console.log(newMix)
+    myMixes[`mix${(myMixes.count)}`] = newMix
+    myMixes.count++
+    console.log(myMixes)
+}
+
+
+$('#add-mix').click(objectTest)
+$('.filter-item').click(handleFilterClick)
