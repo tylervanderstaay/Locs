@@ -67,11 +67,13 @@ function toggleChoice(event) {
     target.addClass(states[currInd])
 }
 function searchIngredient(event) {
-    const ingredient = event.target.id;
+    const ingredient = event.target.dataset.ing;
     function checkLocal(search) {
-        if (!localStorage.getItem(search) === null) {
+        if (localStorage.getItem(search) !== null) {
+            console.log('STORAGE')
             return JSON.parse(localStorage.getItem(search))
         } else {
+            console.log('FETCHING')
             return fetchData(search)
         }
     }
@@ -89,7 +91,7 @@ function searchIngredient(event) {
                         name: item.strDrink,
                         img: item.strDrinkThumb
                     }
-                    thisData.push({ id: thisObj })
+                    thisData.push({ [id]: thisObj })
                     console.log(item)
                     ids.push(item.idDrink)
                 })
@@ -108,7 +110,7 @@ const lines = {
     type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
     category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
     ingredient: (id, ing) => {
-        return `<button class="filter-item ig" id="${id}">${ing}
+        return `<button class="filter-item ig" id="${id}" data-ing="${ing}">${ing}
     </button>`}
 }
 
@@ -138,5 +140,5 @@ Object.keys(categories).forEach((type) => {
 
 getIngredients()
 
-$('.f-item').click(toggleChoice)
-console.log(lines.category('rum'))
+$('.filter-item').click(toggleChoice)
+$('.filter-item').click(searchIngredient)

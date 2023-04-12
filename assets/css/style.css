@@ -6,7 +6,7 @@
     flex-direction:row;
     flex-wrap:wrap;
 }
-.f-type{
+.filter-type{
     min-height:200px;
     height:fit-content;
     width:100%;
@@ -68,14 +68,14 @@
     flex-direction:column;
     justify-content:center;
 }
-.f-cat{
+.filter-cat{
     width: 12%;
     display:flex;
     flex-direction:column;
     justify-items:flex-start;
     align-items:center;
 }
-.f-item{
+.filter-item{
     background-color:rgba(245, 245, 220, 0.069);
 }
 
