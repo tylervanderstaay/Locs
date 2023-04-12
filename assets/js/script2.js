@@ -1,5 +1,5 @@
 let newEl;
-categories = {
+const categories = {
     alc: {
         rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
         whiskey: ["Applejack", "Scotch", "Blended whiskey", "Bourbon", "Irish whiskey", "Firewater", "Whiskey", "Johnnie Walker", "Pisco"],
@@ -24,8 +24,8 @@ categories = {
         nother: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
     }
 }
-let mix = {
-    name: 'My Mix',
+const mix = {
+    name: null,
     include: [],
     exclude: [],
     results: []
@@ -51,17 +51,17 @@ function getIngredients() {
             .catch(err => console.error(err));
     }
 }
-function toggleChoice(event){
-    states = ['ig','in','ex']
+function toggleChoice(event) {
+    states = ['ig', 'in', 'ex']
     const ID = event.target.id
     console.log(ID)
     const target = $(`#${ID}`)
     var classList = target.attr('class').split(/\s+/);
     let currInd = states.indexOf(classList[1])
     target.removeClass(states[currInd])
-    if(currInd===2){
-        currInd=0
-    }else{
+    if (currInd === 2) {
+        currInd = 0
+    } else {
         currInd++
     }
     target.addClass(states[currInd])
@@ -104,14 +104,22 @@ function searchIngredient(event) {
     }
     checkLocal(ingredient)
 }
-getIngredients()
 const lines = {
-    type: (type) => { return `<div class="f-type" id="${type}"></div>` },
-    category: (cat) => { return `<div class="f-cat" id="${cat}"><h4>${cat}</h4></div>` },
+    type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
+    category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
     ingredient: (id, ing) => {
-        return `<button class="f-item ig" id="${id}">${ing}
+        return `<button class="filter-item ig" id="${id}">${ing}
     </button>`}
 }
+
+//This block below iterates through our categories object at the top looping first through the two main [types],
+// [type]-> [category] -> [ingredients].
+//Each of these are creating nested <divs> in the order of the initial object. 
+//type <class="f-type" id="[category]"
+//category <class="f-cat" id="[category]">
+//ingredient <button class=f-item (was f-ing...) id="[category][ingIndex]"> ingIndex is determined in the for loop by increasing an external ingCount.
+// Depending where we are in crawling through our categories object, we call to lines[where] and..
+// append the div returned to .btn-list for the type (alc,non-alc), category(GPT sorted Object based on "idk beverage types") into the type, ingredient into category.
 Object.keys(categories).forEach((type) => {
     console.log(lines.type(type))
     let elType = $(lines.type(type))
@@ -119,14 +127,16 @@ Object.keys(categories).forEach((type) => {
     Object.keys(categories[type]).forEach((category) => {
         let elCat = $(lines.category(category))
         elCat.appendTo(`#${type}`)
-        let ingCount=0;
-        categories[type][category].forEach((ingredient)=>{
-            let elIng = $(lines.ingredient(`${category}${ingCount}`,ingredient))
+        let ingCount = 0;
+        categories[type][category].forEach((ingredient) => {
+            let elIng = $(lines.ingredient(`${category}${ingCount}`, ingredient))
             elIng.appendTo(`#${category}`)
             ingCount++
         })
     })
 })
+
+getIngredients()
 
 $('.f-item').click(toggleChoice)
 console.log(lines.category('rum'))

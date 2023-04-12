@@ -56,14 +56,12 @@
     justify-content:center;
     align-items:center;
 }
-.mix-header{
-    width:23%;
-}
 #test{
     display:flex;
     flex-direction:column;
 }
 .mix-header{
+    width:23%;
     padding:15px;
     border:1px solid black;
     display:flex;
