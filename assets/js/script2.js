@@ -104,14 +104,6 @@ function searchIngredient(event) {
     }
     checkLocal(ingredient)
 }
-
-// alcs.inglist.forEach(function (item) {
-//     newEl = $(`<button class="liq" id="${item}">${item}</button>`)
-//     newEl.appendTo(".btn-list")
-// })
-
-
-// $(".liq").click(searchIngredient)
 getIngredients()
 const lines = {
     type: (type) => { return `<div class="f-type" id="${type}"></div>` },
