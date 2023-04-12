@@ -1,12 +1,11 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset='UTF-8' />
-    <title>REPLACE TITLE</title>
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drink Assist</title>
 </head>
-
 <body>
     <header>
         <nav>
@@ -16,41 +15,47 @@
 
 
     </header>
-
-    <main>
-        <div id="mix-control">
-            <button id="add-mix">Click to Add Mix</button>
-        </div>
-        <div class="btn-list">
-        </div>
-        <div id="mix-headers">
-            <div class="mix-container" id="m-1">
-                <div class="mix-header" id="h-1">
-                    <h2>Mix 1</h2>
-                    <div id="filter-container" id="f-1">
-                        <div class="in-cont" id="i-1">
-                            <filter class="included">test</filter>
-
-                        </div>
-                        <div class="ex-cont" id="e-1">
-                            <filter class="excluded">test</filter>
-
-                        </div>
-                    </div>
-                    <button id="openFilter">Edit Filter</button>
-
-                </div>
-                <div class="mix-results" id="r-1">
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-
-
-    </footer>
-    <script src="./assets/js/script2.js"></script>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Drink Assist</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Liquor
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Vodka</a></li>
+            <li><a href="#">Gin</a></li>
+            <li><a href="#">Rum</a></li>
+            <li><a href="#">Tequila</a></li>
+            <li><a href="#">Whiskey</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Liqueur
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Triple sec</a></li>
+            <li><a href="#">Amaretto</a></li>
+            <li><a href="#">Kahlua</a></li>
+            <li><a href="#">Baileys Irish Cream</a></li>
+            <li><a href="#">Cointreau</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Mixer
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Orange juice</a></li>
+            <li><a href="#">Cranberry juice</a></li>
+            <li><a href="#">Soda water</a></li>
+            <li><a href="#">Tonic water</a></li>
+            <li><a href="#">Ginger beer</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </body>
-
 </html>
