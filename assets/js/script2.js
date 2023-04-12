@@ -24,6 +24,7 @@ const categories = {
     }
 }
 const mix = {
+    selector: null,
     name: null,
     include: [],
     exclude: [],
@@ -34,6 +35,7 @@ const alcs = {
     inglist: getIngredients()
 }
 let myMixes = {
+    selected:'',
     count:0
 }
 function getIngredients() {
@@ -52,61 +54,6 @@ function getIngredients() {
             })
             .catch(err => console.error(err));
     }
-}
-function toggleChoice(event) {
-    states = ['ig', 'in', 'ex']
-    const ID = event.target.id
-    console.log(ID)
-    const target = $(`#${ID}`)
-    var classList = target.attr('class').split(/\s+/);
-    let currInd = states.indexOf(classList[1])
-    target.removeClass(states[currInd])
-    if (currInd === 2) {
-        currInd = 0
-    } else {
-        currInd++
-    }
-    target.addClass(states[currInd])
-}
-function searchIngredient(event) {
-    const ingredient = event.target.dataset.ing;
-    function checkLocal(search) {
-        if (localStorage.getItem(search) !== null) {
-            console.log('STORAGE')
-            return JSON.parse(localStorage.getItem(search))
-        } else {
-            console.log('FETCHING')
-            return fetchData(search)
-        }
-    }
-    function fetchData(search) {
-        let ids = []
-        let thisData = [];
-        const options = { method: "GET" };
-        fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
-                response.drinks.forEach((item) => {
-                    let id = item.idDrink
-                    let thisObj = {
-                        name: item.strDrink,
-                        img: item.strDrinkThumb
-                    }
-                    thisData.push({ [id]: thisObj })
-                    console.log(item)
-                    ids.push(item.idDrink)
-                })
-                localStorage.setItem(search, JSON.stringify(ids))
-                const oldData = JSON.parse(localStorage.getItem('idData'))
-                if (oldData !== null) {
-
-                }
-                return response
-            })
-            .catch(err => console.error(err));
-    }
-    checkLocal(ingredient)
 }
 function createFilterButtons() {
     const lines = {
@@ -143,20 +90,6 @@ function createFilterButtons() {
 function handleFilterClick(event){
     const id=event.target.id
     const ingredient=event.target.dataset.ing
-
-    function toggleChoice(id, newIds) {
-        states = ['ig', 'in', 'ex']
-        const target = $(`#${id}`)
-        var classList = target.attr('class').split(/\s+/);
-        let currInd = states.indexOf(classList[1])
-        target.removeClass(states[currInd])
-        if (currInd === 2) {
-            currInd = 0
-        } else {
-            currInd++
-        }
-        target.addClass(states[currInd])
-    }
     function searchIngredient(ingredient) {
         function checkLocal(search) {
             if (localStorage.getItem(search) !== null) {
@@ -196,27 +129,52 @@ function handleFilterClick(event){
         }
         checkLocal(ingredient)
     }
-
+    function toggleChoice(id, newIds) {
+        states = {
+            ig:{
+                next:'included',
+            },
+            in:{
+                next:'excluded'
+            }
+        }
+        states = ['ignored', 'included', 'excluded']
+        const target = $(`#${id}`)
+        var classList = target.attr('class').split(/\s+/);
+        let currInd = states.indexOf(classList[1])
+        target.removeClass(states[currInd])
+        if (currInd === states.length-1) {
+            currInd = 0
+        } else {
+            currInd++
+        }
+        target.addClass(states[currInd])
+    }
     newChoices = searchIngredient(ingredient)
     toggleChoice(id, newChoices)
-    
 }
+function newMix(){
 
+    function createObject(){
+    const newMix = new Object(mix);
+    const mixId = `mix-${(myMixes.count+1)}`
+    newMix.selector = `#${mixId}`
+    console.log(newMix)
+    myMixes[mixId] = newMix
+    myMixes.selected= newMix.selector
+    myMixes.count++
+    console.log(myMixes)
+    }
 
+    function addElements(){
+        const lines = {
 
+        }
+    }
+    createObject()
+}
 
 getIngredients()
 createFilterButtons()
-
-function objectTest(event){
-    console.log(event.target.id)
-    const newMix = new Object(mix);
-    console.log(newMix)
-    myMixes[`mix${(myMixes.count)}`] = newMix
-    myMixes.count++
-    console.log(myMixes)
-}
-
-
-$('#add-mix').click(objectTest)
+$('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)

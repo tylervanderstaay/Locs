@@ -84,12 +84,15 @@
     width: 100px;
     height:35px;
 }
-.in{
+.included{
     background-color:green;
 }
-.ex{
+.excluded{
     background-color:red;
 }
 .hidden{
     display:none;
+}
+.unfocus{
+    filter:blur(2px);
 }
