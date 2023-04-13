@@ -2,28 +2,29 @@
 
 <head>
     <meta charset='UTF-8' />
-    <title>REPLACE TITLE</title>
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>DrinkAssist - Find your cocktail recipe!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alkatra&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
-    <header>
-        <nav>
-
-
-        </nav>
-
-
-    </header>
-
+    <div class="bg-cover bg-center h-64" style="background-image: url(./assets/images/drinks-lined-up-dark2.jpg);" id="picture-container">
+        <header class="bg-gradient-to-r from-yellow-900" id="top-pg">
+            <h1 class="pt-44 pl-8 italic text-5xl font-semibold text-white">DrinkAssist</h1>
+            <p class="p1 pl-10 pb-1 italic text-xl text-white">Find your cocktail recipe!</p>
+        </header>
+    </div>
     <main>
         <div id="mix-control">
             <button id="add-mix">Click to Add Mix</button>
         </div>
         <div class="btn-list">
         </div>
-        <div id="mix-headers">
+        <div id="mix-filters">
             <div class="mix-container" id="m-1">
                 <div class="mix-header" id="h-1">
                     <h2>Mix 1</h2>

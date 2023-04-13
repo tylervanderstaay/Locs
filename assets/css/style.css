@@ -64,6 +64,7 @@
     flex-direction:column;
 }
 .mix-header{
+    width:23%;
     padding:15px;
     border:1px solid black;
     display:flex;
@@ -91,4 +92,14 @@
 }
 .ex{
     background-color:red;
+}
+
+#top-pg {
+    font-family: Alkatra;
+    height: fit-content;
+}
+
+#picture.container {
+    display: flex;
+    height: 60px;
 }
