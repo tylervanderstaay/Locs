@@ -35,8 +35,8 @@ const alcs = {
     inglist: getIngredients()
 }
 let myMixes = {
-    selected:'',
-    count:0
+    selected: '',
+    count: 0
 }
 function getIngredients() {
     let ingredients = [];
@@ -60,7 +60,7 @@ function createFilterButtons() {
         type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
         category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
         ingredient: (id, ing) => {
-            return `<button class="filter-item ig" id="${id}" data-ing="${ing}">${ing}
+            return `<button class="filter-item ignored" id="${id}" data-ing="${ing}">${ing}
         </button>`}
     }
     //This block below iterates through our categories object at the top looping first through the two main [types],
@@ -87,9 +87,9 @@ function createFilterButtons() {
         })
     })
 }
-function handleFilterClick(event){
-    const id=event.target.id
-    const ingredient=event.target.dataset.ing
+function handleFilterClick(event) {
+    const id = event.target.id
+    const ingredient = event.target.dataset.ing
     function searchIngredient(ingredient) {
         function checkLocal(search) {
             if (localStorage.getItem(search) !== null) {
@@ -121,7 +121,7 @@ function handleFilterClick(event){
                     localStorage.setItem(search, JSON.stringify(ids))
                     const oldData = JSON.parse(localStorage.getItem('idData'))
                     if (oldData !== null) {
-    
+
                     }
                     return response
                 })
@@ -130,20 +130,12 @@ function handleFilterClick(event){
         checkLocal(ingredient)
     }
     function toggleChoice(id, newIds) {
-        states = {
-            ig:{
-                next:'included',
-            },
-            in:{
-                next:'excluded'
-            }
-        }
         states = ['ignored', 'included', 'excluded']
         const target = $(`#${id}`)
         var classList = target.attr('class').split(/\s+/);
         let currInd = states.indexOf(classList[1])
         target.removeClass(states[currInd])
-        if (currInd === states.length-1) {
+        if (currInd === states.length - 1) {
             currInd = 0
         } else {
             currInd++
@@ -153,27 +145,40 @@ function handleFilterClick(event){
     newChoices = searchIngredient(ingredient)
     toggleChoice(id, newChoices)
 }
-function newMix(){
+function toggleFilter(){
 
-    function createObject(){
-    const newMix = new Object(mix);
-    const mixId = `mix-${(myMixes.count+1)}`
-    newMix.selector = `#${mixId}`
-    console.log(newMix)
-    myMixes[mixId] = newMix
-    myMixes.selected= newMix.selector
-    myMixes.count++
-    console.log(myMixes)
-    }
-
-    function addElements(){
-        const lines = {
-
-        }
-    }
-    createObject()
 }
-
+function newMix() {
+    
+    function createObject() {
+        const newMix = new Object(mix);
+        myMixes.count++
+        const mixId = `mix-${myMixes.count}`
+        newMix.selector = `#${mixId}`
+        myMixes[mixId] = newMix
+        myMixes.selected = newMix.selector
+        return myMixes.count
+    }
+    let mixId = createObject()
+    function addElements(mixId) {
+        const lines = {
+            target: $('#mix-filters'),
+            element: () => {
+                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}">Edit Filter</button></div></div><div class="mix-results" id="r-${mixId}></div>`;
+            },
+            listener: ()=>{
+                $('#filter-window').toggleClass("hidden")
+            },
+            execute: ()=>{
+                $(lines.element()).appendTo(lines.target)
+                $(`#edit-${mixId}`).click(lines.listener)
+            }
+        }
+        lines.execute()
+        
+    }
+    addElements(mixId)
+}
 getIngredients()
 createFilterButtons()
 $('#add-mix').click(newMix)

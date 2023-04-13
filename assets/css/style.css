@@ -40,6 +40,10 @@
     flex-direction:row;
 
 }
+#mix-filters{
+    display:flex;
+    flex-direction:row;
+}
 #mix-control{
     display:flex;
     justify-content:center;
@@ -50,23 +54,21 @@
     border-radius:15px;
 }
 .mix-container{
+    width:25%;
     display:flex;
     flex-wrap:wrap;
     flex-direction:column;
     justify-content:center;
     align-items:center;
 }
-#test{
+.mix-header{
     display:flex;
     flex-direction:column;
-}
-.mix-header{
-    width:23%;
+    align-items:center;
+    width:80%;
     padding:15px;
     border:1px solid black;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+
 }
 .filter-cat{
     width: 12%;
@@ -86,9 +88,11 @@
 }
 .included{
     background-color:green;
+    color:white;
 }
 .excluded{
     background-color:red;
+    color:white;
 }
 .hidden{
     display:none;
