@@ -43,7 +43,7 @@ const mix = {
 }
 let myMixes = {
     f: {
-        refresh: (mix, from) => {
+        refresh: (mix) => {
             finalTub = []
             searchTag = {}
             console.log("***")
@@ -132,10 +132,10 @@ function handleFilterClick(event) {
             if (Object.keys(items).includes(search)) {
                 console.log('STORAGE')
                 console.log(items[search])
-                return [items[search], 1]
+                return items[search]
             } else {
                 console.log('FETCHING')
-                return [fetchData(search), 0]
+                return fetchData(search)
             }
         }
         function fetchData(search) {
@@ -222,7 +222,8 @@ function newMix() {
             },
             listener: (event) => {
                 myMixes.selected = event.target.dataset.mixid
-                $('#filter-window').toggleClass("hidden", false)
+                console.log(myMixes.selected)
+                $('.filter-container').toggleClass("hidden")
             },
             execute: () => {
                 $(lines.element()).appendTo(lines.target)
@@ -234,7 +235,12 @@ function newMix() {
     }
     addElements(mixId)
 }
+
+
 getIngredients()
 createFilterButtons()
+$('.tgl-type').click(()=>{
+    $('.tgl-type').toggleClass('included ignored')
+})
 $('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)

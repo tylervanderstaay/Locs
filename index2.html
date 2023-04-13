@@ -17,9 +17,19 @@
         <div id="mix-control">
             <button id="add-mix">Click to Add Mix</button>
         </div>
-        <div class="btn-list hidden" id="filter-window">                         
-        </div>
         <div id="mix-filters">
+        </div>
+        <div class="filter-container hidden">
+            <div class="toggle-container" id="filter-type">
+                <button class="tgl-type included" data-type="alc">
+                    Alcohol
+                </button>
+                <button class="tgl-type ignored" data-type="non">
+                    Non-Alcohol
+                </button>
+            </div>
+            <div class="btn-list" id="filter-window">
+            </div>
         </div>
     </main>
     <footer>
