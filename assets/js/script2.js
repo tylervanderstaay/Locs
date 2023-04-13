@@ -24,16 +24,17 @@ const categories = {
     }
 }
 let items = { ...localStorage } || {}
-function cleanItems(){
-    Object.keys(items).forEach(key=>{
+function cleanItems() {
+    Object.keys(items).forEach(key => {
         let item = items[key]
         items[key] = JSON.parse(item)
     })
+    console.log('cleaned')
 }
 cleanItems()
-
 let pulls = {}
 const mix = {
+    alone: true,
     selector: null,
     name: null,
     must: [],
@@ -43,29 +44,65 @@ const mix = {
 }
 let myMixes = {
     f: {
-        refresh: (mix) => {
+        refresh: (mix, from) => {
             finalTub = []
             searchTag = {}
-            console.log("***")
-            console.log(mix.include)
-            console.log(mix.exclude)
-            console.log("***")
-            
-            mix.include.forEach(ingredient => {
-                console.log("BEGIN INGREDIENT TESTING*****")
-                console.log(ingredient)
-                console.log(items[ingredient])
-                items[ingredient].forEach(id => {
-                    if (Object.keys(searchTag).includes(id)) {
-                        searchTag[id].count++
-                        searchTag[id].ings.push(ingredient)
-                    } else {
-                        searchTag[id]={count:1,ings:[ingredient]}
-                    }
+            empty = false
+            idLot = {
+                inclusions: [],
+                exclusions: []
+            }
+            if (mix.exclude.length > 0) {
+                mix.exclude.forEach(ingredient => {
+                    let newLot = [...idLot.exclusions, ...items[ingredient]]
+                    idLot.exclusions = newLot
                 })
-                console.log("***********END INGREDIENT TESTING*****")
+            }
+            console.log(`EXCLUSIONS: ${idLot.exclusions}`)
+
+            highest = 0
+            if (mix.include.length > 0) {
+                mix.include.forEach(ingredient => {
+                    console.log("BEGIN INGREDIENT TESTING*****")
+                    console.log(ingredient)
+                    console.log(items[ingredient])
+                    items[ingredient].forEach(id => {
+                        if (Object.keys(searchTag).includes(id)) {
+                            searchTag[id].count++
+                            if (searchTag[id].count > highest && !idLot.exclusions.includes(searchTag[id])) {
+                                highest = searchTag[id].count
+                            }
+                            searchTag[id].ings.push(ingredient)
+                        } else {
+                            searchTag[id] = { count: 1, ings: [ingredient] }
+                        }
+                    })
+                })
+            }
+            newSort = {}
+
+            Object.keys(searchTag).forEach(included => {
+                if (!idLot.exclusions.includes(included)) {
+                    times = searchTag[included].count
+                    if (newSort[times] === undefined || newSort[times].length === 0) {
+                        newSort[times] = [included]
+                    } else {
+                        newSort[times].push(included)
+                    }
+                }
             })
-            console.log(searchTag)
+            tub = []
+            for (let i = Object.keys(newSort).length; i > 0; i--) {
+                console.log(newSort[i])
+                tub = [...tub, ...newSort[i]]
+            }
+            tub.forEach(item => {
+                console.log(searchTag[item])
+            })
+            myMixes.target().results = tub
+        },
+        putResults: () => {
+            target = ``
         }
     },
     selected: '',
@@ -128,7 +165,9 @@ function handleFilterClick(event) {
     const targetData = event.target.dataset.tags.split(" ")
     const category = targetData[1]
     const ingredient = targetData[2].split('-').join(' ')
+
     function searchIngredient(ingredient) {
+
         function checkLocal(search) {
             if (Object.keys(items).includes(search)) {
                 console.log('STORAGE')
@@ -139,68 +178,60 @@ function handleFilterClick(event) {
                 return fetchData(search)
             }
         }
-        function fetchData(search) {
-            console.log(search)
-            let ids = []
-            let thisData = [];
-            console.log('here1')
+        async function fetchData(search) {
             const options = { method: "GET" };
-            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                    response.drinks.forEach((item) => {
-                        console.log('here?')
-                        let id = item.idDrink
-                        let thisObj = {
-                            name: item.strDrink,
-                            img: item.strDrinkThumb
-                        }
-                        thisData.push({ [id]: thisObj })
-                        console.log(item)
-                        ids.push(item.idDrink)
-                    })
-                    console.log("here")
-                    localStorage.setItem(search, JSON.stringify(ids))
-                    console.log("yep, here")
-                    items[search] = ids
-                    return response
-                })
-                .catch(err => console.error(err));
+            let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options);
+            response = await response.json()
+            idList = []
+            console.log(response)
+            response.drinks.forEach((drink) => {
+                if (!Object.keys(pulls).includes(drink.idDrink)) {
+                    thisObj = {
+                        status: 0,
+                        name: drink.strDrink,
+                        img: drink.strDrinkThumb
+                    }
+                    pulls[drink.idDrink] = thisObj
+                    idList.push(drink.idDrink)
+                }
+            })
+            console.log(idList)
+            items[search] = idList
+            localStorage.setItem(search, JSON.stringify(idList))
+            localStorage.setItem('ids', JSON.stringify(pulls))
+            await idList
         }
+
         checkLocal(ingredient)
     }
+
     function toggleChoice(id, from) {
         ostates = {
             ignored: (target) => {
                 target.toggleClass('ignored')
-                myMixes.target().include.push(ingredient)
-                target.toggleClass('included')
-                console.log(myMixes.target())
-                myMixes.f.refresh(myMixes.target(),from)
+                if (!myMixes.target().include.includes(ingredient)) {
+                    myMixes.target().include.push(ingredient)
+                    target.toggleClass('included')
+                }
             },
             included: (target) => {
                 target.toggleClass('included')
                 myMixes.target().include.splice(ingredient, 1)
                 myMixes.target().exclude.push(ingredient)
                 target.toggleClass('excluded')
-                console.log(myMixes.target())
-                myMixes.f.refresh(myMixes.target(), from)
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
                 myMixes.target().exclude.splice(ingredient, 1)
                 target.toggleClass('ignored')
-                console.log(myMixes[myMixes.selected])
-                myMixes.f.refresh(myMixes.target(), from)
+
             }
         }
         ostates[event.target.classList[1]]($(`#${id}`))
+        myMixes.f.refresh(myMixes.target())
     }
     newChoices = searchIngredient(ingredient)
-    console.log("*********")
-    console.log(newChoices)
-    console.log("*********")
+    console.log("****************")
     toggleChoice(id, newChoices)
 
 }
@@ -217,9 +248,12 @@ function newMix() {
     let mixId = createObject()
     function addElements(mixId) {
         const lines = {
-            target: $('#mix-filters'),
+            target: [$('#mix-filters'), $("#mix-responses")],
             element: () => {
-                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}" data-mixid="mix-${mixId}">Edit Filter</button></div></div><div class="mix-results" id="r-${mixId}></div>`;
+                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}" data-mixid="mix-${mixId}">Edit Filter</button></div></div>`;
+            },
+            results: () => {
+                return `<div class="response-container" id="r-${mixId}"></div>`
             },
             listener: (event) => {
                 myMixes.selected = event.target.dataset.mixid
@@ -227,23 +261,22 @@ function newMix() {
                 $('.filter-container').toggleClass("hidden")
             },
             execute: () => {
-                $(lines.element()).appendTo(lines.target)
+                $(lines.element()).appendTo(lines.target[0])
+                $(lines.results()).appendTo(lines.target[1])
                 $(`#edit-${mixId}`).click(lines.listener)
             }
         }
-        lines.execute()
 
+        lines.execute()
     }
     addElements(mixId)
 }
 
 getIngredients()
 createFilterButtons()
-console.log($('#toggle-type'))
-$('.tgl-type').click(()=>{
+$('.tgl-type').click((event) => {
     $('.tgl-type').toggleClass('included ignored')
     $('.filter-type').toggleClass('hidden')
-    // $(`#${$('#myButtons').dataset.type}`).toggleClass('hidden')
 })
 $('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)

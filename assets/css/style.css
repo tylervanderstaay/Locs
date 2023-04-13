@@ -74,7 +74,6 @@ body{
     width:80%;
     padding:15px;
     border:1px solid black;
-
 }
 .filter-cat{
     width: 12%;
@@ -121,4 +120,17 @@ body{
 }
 .unfocus{
     filter:blur(2px);
+}
+#mix-responses{
+    display:flex;
+    flex-direction:columns;
+    justify-content:space-around;
+    background-color:gray;
+}
+.response-container{
+    width:410px;
+    height:900px;
+    border:1px solid;
+    display:flex;
+    flex-direction:column;
 }
