@@ -23,25 +23,48 @@ const categories = {
         nother: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
     }
 }
+let items = { ...localStorage } || {}
+
+let pulls = {}
 const mix = {
     selector: null,
     name: null,
+    must: [],
     include: [],
     exclude: [],
     results: []
 }
-const alcs = {
-    baseliquors: ["Gin", "Vodka", "Whiskey", "Tequila", "Rum", "Brandy"],
-    inglist: getIngredients()
-}
 let myMixes = {
+    f: {
+        refresh: (mix) => {
+            finalTub = []
+            searchTag = {}
+            console.log("***")
+            console.log(mix.include)
+            console.log(mix.exclude)
+            console.log("***")
+
+            mix.include.forEach(ingredient => {
+                JSON.parse(items[ingredient]).forEach(id => {
+                    if (Object.keys(searchTag).includes(id)) {
+                        searchTag[id].count++
+                        searchTag[id].ings.push(ingredient)
+                    } else {
+                        searchTag[id]={count:1,ings:[ingredient]}
+                    }
+                })
+            })
+            console.log(searchTag)
+        }
+    },
     selected: '',
+    target: () => { return myMixes[myMixes.selected] },
     count: 0
 }
 function getIngredients() {
     let ingredients = [];
-    if (localStorage.getItem("ingredients") !== null) {
-        return JSON.parse(localStorage.getItem("ingredients"))
+    if (Object.keys(items).includes("ingredients")) {
+        return items["ingredients"]
     } else {
         const options = { method: "GET" };
         fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list", options)
@@ -59,9 +82,9 @@ function createFilterButtons() {
     const lines = {
         type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
         category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
-        ingredient: (id, ing) => {
-            return `<button class="filter-item ignored" id="${id}" data-ing="${ing}">${ing}
-        </button>`}
+        ingredient: (id, data) => {
+            return `<button class="filter-item ignored" id="${id}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
+        }
     }
     //This block below iterates through our categories object at the top looping first through the two main [types],
     // [type]-> [category] -> [ingredients].
@@ -80,7 +103,8 @@ function createFilterButtons() {
             elCat.appendTo(`#${type}`)
             let ingCount = 0;
             categories[type][category].forEach((ingredient) => {
-                let elIng = $(lines.ingredient(`${category}${ingCount}`, ingredient))
+                ingredient = ingredient.split(' ').join('-')
+                let elIng = $(lines.ingredient(`${category}${ingCount}`, [type, category, ingredient]))
                 elIng.appendTo(`#${category}`)
                 ingCount++
             })
@@ -89,26 +113,32 @@ function createFilterButtons() {
 }
 function handleFilterClick(event) {
     const id = event.target.id
-    const ingredient = event.target.dataset.ing
+    const targetData = event.target.dataset.tags.split(" ")
+    const category = targetData[1]
+    const ingredient = targetData[2].split('-').join(' ')
     function searchIngredient(ingredient) {
         function checkLocal(search) {
-            if (localStorage.getItem(search) !== null) {
+            if (Object.keys(items).includes(search)) {
                 console.log('STORAGE')
-                return JSON.parse(localStorage.getItem(search))
+                console.log(items[search])
+                return items[search];
             } else {
                 console.log('FETCHING')
                 return fetchData(search)
             }
         }
         function fetchData(search) {
+            console.log(search)
             let ids = []
             let thisData = [];
+            console.log('here1')
             const options = { method: "GET" };
             fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
                 .then(response => response.json())
                 .then(response => {
                     console.log(response)
                     response.drinks.forEach((item) => {
+                        console.log('here?')
                         let id = item.idDrink
                         let thisObj = {
                             name: item.strDrink,
@@ -118,11 +148,10 @@ function handleFilterClick(event) {
                         console.log(item)
                         ids.push(item.idDrink)
                     })
+                    console.log("here")
                     localStorage.setItem(search, JSON.stringify(ids))
-                    const oldData = JSON.parse(localStorage.getItem('idData'))
-                    if (oldData !== null) {
-
-                    }
+                    console.log("yep, here")
+                    items[search] = ids
                     return response
                 })
                 .catch(err => console.error(err));
@@ -130,26 +159,39 @@ function handleFilterClick(event) {
         checkLocal(ingredient)
     }
     function toggleChoice(id, newIds) {
-        states = ['ignored', 'included', 'excluded']
-        const target = $(`#${id}`)
-        var classList = target.attr('class').split(/\s+/);
-        let currInd = states.indexOf(classList[1])
-        target.removeClass(states[currInd])
-        if (currInd === states.length - 1) {
-            currInd = 0
-        } else {
-            currInd++
+        ostates = {
+            ignored: (target) => {
+                target.toggleClass('ignored')
+                myMixes.target().include.push(ingredient)
+                target.toggleClass('included')
+                console.log(myMixes.target())
+                myMixes.f.refresh(myMixes.target())
+            },
+            included: (target) => {
+                target.toggleClass('included')
+                myMixes.target().include.splice(ingredient, 1)
+                myMixes.target().exclude.push(ingredient)
+                target.toggleClass('excluded')
+                console.log(myMixes.target())
+                myMixes.f.refresh(myMixes.target())
+            },
+            excluded: (target) => {
+                target.toggleClass('excluded')
+                myMixes.target().exclude.splice(ingredient, 1)
+                target.toggleClass('ignored')
+                console.log(myMixes[myMixes.selected])
+                myMixes.f.refresh(myMixes.target())
+            }
         }
-        target.addClass(states[currInd])
+
+        ostates[event.target.classList[1]]($(`#${id}`))
+
     }
     newChoices = searchIngredient(ingredient)
     toggleChoice(id, newChoices)
-}
-function toggleFilter(){
 
 }
 function newMix() {
-    
     function createObject() {
         const newMix = new Object(mix);
         myMixes.count++
@@ -164,18 +206,19 @@ function newMix() {
         const lines = {
             target: $('#mix-filters'),
             element: () => {
-                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}">Edit Filter</button></div></div><div class="mix-results" id="r-${mixId}></div>`;
+                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}" data-mixid="mix-${mixId}">Edit Filter</button></div></div><div class="mix-results" id="r-${mixId}></div>`;
             },
-            listener: ()=>{
-                $('#filter-window').toggleClass("hidden")
+            listener: (event) => {
+                myMixes.selected = event.target.dataset.mixid
+                $('#filter-window').toggleClass("hidden", false)
             },
-            execute: ()=>{
+            execute: () => {
                 $(lines.element()).appendTo(lines.target)
                 $(`#edit-${mixId}`).click(lines.listener)
             }
         }
         lines.execute()
-        
+
     }
     addElements(mixId)
 }
