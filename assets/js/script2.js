@@ -24,6 +24,13 @@ const categories = {
     }
 }
 let items = { ...localStorage } || {}
+function cleanItems(){
+    Object.keys(items).forEach(key=>{
+        let item = items[key]
+        items[key] = JSON.parse(item)
+    })
+}
+cleanItems()
 
 let pulls = {}
 const mix = {
@@ -36,16 +43,19 @@ const mix = {
 }
 let myMixes = {
     f: {
-        refresh: (mix) => {
+        refresh: (mix, from) => {
             finalTub = []
             searchTag = {}
             console.log("***")
             console.log(mix.include)
             console.log(mix.exclude)
             console.log("***")
-
+            
             mix.include.forEach(ingredient => {
-                JSON.parse(items[ingredient]).forEach(id => {
+                console.log("BEGIN INGREDIENT TESTING*****")
+                console.log(ingredient)
+                console.log(items[ingredient])
+                items[ingredient].forEach(id => {
                     if (Object.keys(searchTag).includes(id)) {
                         searchTag[id].count++
                         searchTag[id].ings.push(ingredient)
@@ -53,6 +63,7 @@ let myMixes = {
                         searchTag[id]={count:1,ings:[ingredient]}
                     }
                 })
+                console.log("***********END INGREDIENT TESTING*****")
             })
             console.log(searchTag)
         }
@@ -121,10 +132,10 @@ function handleFilterClick(event) {
             if (Object.keys(items).includes(search)) {
                 console.log('STORAGE')
                 console.log(items[search])
-                return items[search];
+                return [items[search], 1]
             } else {
                 console.log('FETCHING')
-                return fetchData(search)
+                return [fetchData(search), 0]
             }
         }
         function fetchData(search) {
@@ -158,14 +169,14 @@ function handleFilterClick(event) {
         }
         checkLocal(ingredient)
     }
-    function toggleChoice(id, newIds) {
+    function toggleChoice(id, from) {
         ostates = {
             ignored: (target) => {
                 target.toggleClass('ignored')
                 myMixes.target().include.push(ingredient)
                 target.toggleClass('included')
                 console.log(myMixes.target())
-                myMixes.f.refresh(myMixes.target())
+                myMixes.f.refresh(myMixes.target(),from)
             },
             included: (target) => {
                 target.toggleClass('included')
@@ -173,21 +184,22 @@ function handleFilterClick(event) {
                 myMixes.target().exclude.push(ingredient)
                 target.toggleClass('excluded')
                 console.log(myMixes.target())
-                myMixes.f.refresh(myMixes.target())
+                myMixes.f.refresh(myMixes.target(), from)
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
                 myMixes.target().exclude.splice(ingredient, 1)
                 target.toggleClass('ignored')
                 console.log(myMixes[myMixes.selected])
-                myMixes.f.refresh(myMixes.target())
+                myMixes.f.refresh(myMixes.target(), from)
             }
         }
-
         ostates[event.target.classList[1]]($(`#${id}`))
-
     }
     newChoices = searchIngredient(ingredient)
+    console.log("*********")
+    console.log(newChoices)
+    console.log("*********")
     toggleChoice(id, newChoices)
 
 }
