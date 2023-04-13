@@ -48,6 +48,7 @@ body{
 #mix-filters{
     display:flex;
     flex-direction:row;
+    justify-content:space-around;
 }
 #mix-control{
     display:flex;

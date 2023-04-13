@@ -121,6 +121,7 @@ function createFilterButtons() {
             })
         })
     })
+    $('#non').toggleClass('hidden')
 }
 function handleFilterClick(event) {
     const id = event.target.id
@@ -236,11 +237,13 @@ function newMix() {
     addElements(mixId)
 }
 
-
 getIngredients()
 createFilterButtons()
+console.log($('#toggle-type'))
 $('.tgl-type').click(()=>{
     $('.tgl-type').toggleClass('included ignored')
+    $('.filter-type').toggleClass('hidden')
+    // $(`#${$('#myButtons').dataset.type}`).toggleClass('hidden')
 })
 $('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)
