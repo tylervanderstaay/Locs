@@ -93,17 +93,14 @@ let myMixes = {
                     console.log("******")
                     console.log("******")
                     console.log(included)
-
-                    if (newSort[included] === undefined) {
-                        newSort[included] = 1
-                        console.log("NEW ITEM!")
-                        console.log(newSort[included])
-                    } else {
-                        quant = newSort[included]
-                        newSort[included]=quant
-                        console.log("INCREASED!")
-                        console.log(newSort[included])
-                    }
+                    quant = 0
+                    console.log(pulls[included])
+                    pulls[included].ings.forEach(ing => {
+                        if(mix.include.includes(ing)){
+                            quant++
+                        }
+                    })
+                    newSort[included] = quant
                 }
             })
             console.log("******")
@@ -112,19 +109,23 @@ let myMixes = {
             console.log("******")
             console.log(newSort)
             stub = {}
-            Object.keys(newSort).forEach(id =>{
-                if(stub[newSort[id]] !== undefined){
-                    stub[newSort[id]] = [...stub[newSort[id]],id]
-                }else{
+            Object.keys(newSort).forEach(id => {
+                if (stub[newSort[id]] !== undefined) {
+                    stub[newSort[id]] = [...stub[newSort[id]], id]
+                } else {
                     stub[newSort[id]] = [id]
                 }
             })
 
             console.log("************** stub")
             console.log(stub)
-            nstub=[]
+            nstub = []
             for (let i = Object.keys(stub).length; i > 0; i--) {
-                nstub = [...stub[i], ...nstub]
+                ostub = stub[i]
+                ostub.forEach(id=>{
+                    nstub.push(id)
+                })
+                console.log(nstub)
             }
             console.log(nstub)
             myMixes.target().results = nstub
