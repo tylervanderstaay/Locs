@@ -25,15 +25,10 @@ const categories = {
 }
 let itempull = JSON.parse(localStorage.getItem('items')) || {}
 let items = itempull || {}
-function cleanItems() {
-    Object.keys(items).forEach(key => {
-        let item = items[key]
-        items[key] = JSON.parse(item)
-    })
-    console.log('cleaned')
-}
 let drinkpull = JSON.parse(localStorage.getItem('drinks')) || {}
 let pulls = drinkpull || {}
+
+
 const mix = {
     alone: true,
     selector: null,
@@ -59,11 +54,9 @@ let myMixes = {
                     idLot.exclusions = newLot
                 })
             }
-            console.log(`EXCLUSIONS: ${idLot.exclusions}`)
-            console.log(mix.include)
             if (mix.include.length > 0) {
                 mix.include.forEach(ingredient => {
-                    if (ingredient !== undefined) {
+                    if (items[ingredient] !== undefined) {
                         items[ingredient].forEach(id => {
                             if (Object.keys(searchTag).includes(id)) {
                                 searchTag[id].count++
@@ -88,14 +81,12 @@ let myMixes = {
             })
             tub = []
             for (let i = Object.keys(newSort).length; i > 0; i--) {
-                console.log(newSort[i])
                 tub = [...tub, ...newSort[i]]
             }
-            tub.forEach(item => {
-                console.log(searchTag[item])
-            })
             myMixes.target().results = tub
             myMixes.f.putResults(tub)
+            myMixes.f.putFilters(mix.include,mix.exclude)
+            
         },
         putResults: (results) => {
             const lines = {
@@ -109,11 +100,35 @@ let myMixes = {
             }
             $(target).empty()
             for (let i = 0; i < count; i++) {
-                console.log("***")
-                console.log(pulls[results[i]])
-                console.log("***")
                 $(lines.card(i, pulls[results[i]])).appendTo(target)
             }
+        },
+        putFilters:(included,excluded)=>{
+            const lines = {
+                header:(ing)=>{
+                    return `<p>${ing}</p>`
+                }
+
+            }
+            id = myMixes.selected.split('-')[1]
+            target = [`#included-${id}`,`#excluded-${id}`]
+            $(target[0]).empty()
+            $(target[1]).empty()
+            console.log("**************in")
+            console.log(included)
+            included.forEach(ing => {
+                console.log(ing)
+                console.log(target[0])
+                $(lines.header(ing)).appendTo(target[0])
+            })
+            console.log("**************ex")
+            console.log(excluded)
+            excluded.forEach(exc => {
+                console.log(exc)
+                console.log(target[1])
+                $(lines.header(exc)).appendTo(target[1])
+            })
+            console.log("**********************")
         }
 
     }
@@ -156,7 +171,6 @@ function createFilterButtons() {
     // Depending where we are in crawling through our categories object, we call to lines[where] and..
     // append the div returned to .btn-list for the type (alc,non-alc), category(GPT sorted Object based on "idk beverage types") into the type, ingredient into category.
     Object.keys(categories).forEach((type) => {
-        console.log(lines.type(type))
         let elType = $(lines.type(type))
         elType.appendTo('.btn-list') //change to filter-box element selector
         Object.keys(categories[type]).forEach((category) => {
@@ -180,7 +194,6 @@ function handleFilterClick(event) {
     const ingredient = targetData[2].split('-').join(' ')
 
     function searchIngredient(ingredient) {
-
         function checkLocal(search) {
             if (Object.keys(items).includes(search)) {
                 console.log('STORAGE')
@@ -196,8 +209,6 @@ function handleFilterClick(event) {
             let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options);
             response = await response.json()
             idList = []
-            console.log("******************")
-            console.log(response)
             response.drinks.forEach((drink) => {
                 if (!Object.keys(pulls).includes(drink.idDrink)) {
                     thisObj = {
@@ -209,11 +220,9 @@ function handleFilterClick(event) {
                     idList.push(drink.idDrink)
                 }
             })
-            console.log(idList)
             items[search] = idList
             localStorage.setItem('items', JSON.stringify(items))
             localStorage.setItem('drinks', JSON.stringify(pulls))
-            console.log("******************")
             return idList
         }
 
@@ -227,32 +236,29 @@ function handleFilterClick(event) {
                 if (!myMixes.target().include.includes(ingredient)) {
                     myMixes.target().include.push(ingredient)
                     target.toggleClass('included')
+                    myMixes.f.refresh(myMixes.target(), from)
                 }
             },
             included: (target) => {
                 target.toggleClass('included')
-                myMixes.target().include.splice(ingredient, 1)
-                myMixes.target().exclude.push(ingredient)
                 target.toggleClass('excluded')
+                myMixes.target().exclude.push(ingredient)
+                myMixes.target().include.splice(ingredient, 1)
+                myMixes.f.refresh(myMixes.target(), from)
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
-                myMixes.target().exclude.splice(ingredient, 1)
                 target.toggleClass('ignored')
-
+                myMixes.target().exclude.splice(ingredient, 1)
+                myMixes.f.refresh(myMixes.target(), from)
             }
         }
         ostates[event.target.classList[1]]($(`#${id}`))
-        myMixes.f.refresh(myMixes.target(), from)
+        
     }
+    
     searchIngredient(ingredient)
     newChoices = items[ingredient]
-    console.log("****************")
-    console.log("****************")
-    console.log("****************")
-    console.log("****************")
-    console.log(items)
-    console.log(ingredient)
     toggleChoice(id, newChoices)
 
 }
