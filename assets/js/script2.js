@@ -63,6 +63,7 @@ let myMixes = {
             if (mix.include.length > 0) {
                 mix.include.forEach(ingredient => {
                     let waiting = true;
+                    check = 0;
                     while (waiting === true) {
                         if (items[ingredient] !== undefined) {
                             idLot.inclusions = [...idLot.inclusions, ...items[ingredient]]
@@ -76,6 +77,10 @@ let myMixes = {
                             })
                             waiting = false;
                         } else {
+                            check++
+                            if (check === 10) {
+                                waiting = false;
+                            }
                             console.log("Still waiting")
                             console.log("Still waiting")
                             console.log("Still waiting")
@@ -96,7 +101,7 @@ let myMixes = {
                     quant = 0
                     console.log(pulls[included])
                     pulls[included].ings.forEach(ing => {
-                        if(mix.include.includes(ing)){
+                        if (mix.include.includes(ing)) {
                             quant++
                         }
                     })
@@ -122,7 +127,7 @@ let myMixes = {
             nstub = []
             for (let i = Object.keys(stub).length; i > 0; i--) {
                 ostub = stub[i]
-                ostub.forEach(id=>{
+                ostub.forEach(id => {
                     nstub.push(id)
                 })
                 console.log(nstub)
@@ -213,7 +218,7 @@ function createFilterButtons() {
         type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
         category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
         ingredient: (id, data) => {
-            return `<button class="filter-item ignored" id="${id}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
+            return `<button class="filter-item ignored" id="${data[2]}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
         }
     }
     //This block below iterates through our categories object at the top looping first through the two main [types],
@@ -293,34 +298,41 @@ function handleFilterClick(event) {
         checkLocal(ingredient)
     }
 
-    function toggleChoice(id) {
+    function toggleChoice(id, cont) {
         ostates = {
             ignored: (target) => {
                 target.toggleClass('ignored')
-                if (!myMixes.target().include.includes(ingredient)) {
-                    myMixes.target().include.push(ingredient)
-                    target.toggleClass('included')
+                target.toggleClass('included')
+                if (cont === 1) {
+                    if (!myMixes.target().include.includes(ingredient)) {
+                        myMixes.target().include.push(ingredient)
+                    }
                 }
             },
             included: (target) => {
-                target.toggleClass('excluded')
                 target.toggleClass('included')
-                ind = myMixes.target().include.indexOf(ingredient)
-                myMixes.target().include.splice(ind, 1);
-                myMixes.target().exclude.push(ingredient)
+                target.toggleClass('excluded')
+                if (cont === 1) {
+                    ind = myMixes.target().include.indexOf(ingredient)
+                    myMixes.target().include.splice(ind, 1);
+                    myMixes.target().exclude.push(ingredient)
+                }
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
                 target.toggleClass('ignored')
-                ind = myMixes.target().exclude.indexOf(ingredient)
-                myMixes.target().exclude.splice(ind, 1)
+                if (cont === 1) {
+                    ind = myMixes.target().exclude.indexOf(ingredient)
+                    myMixes.target().exclude.splice(ind, 1)
+                }
             }
         }
         currentclass = event.target.classList[1]
         ostates[currentclass]($(`#${id}`))
     }
     searchIngredient(ingredient)
-    toggleChoice(id)
+
+    toggleChoice(id, 1)
     setTimeout(() => {
         myMixes.f.refresh(myMixes.target())
     }, 800)
@@ -347,14 +359,38 @@ function newMix() {
                 return `<div class="response-container" id="r-${mixId}"></div>`
             },
             listener: (event) => {
-                myMixes.selected = event.target.dataset.mixid
-                console.log(myMixes.selected)
-                $('.filter-container').toggleClass("hidden")
+                if (myMixes.selected === event.target.dataset.mixid) {
+                    $('.filter-container').toggleClass("hidden")
+                } else {
+                    $('.filter-item').toggleClass('included excluded', false)
+                    $('.filter-item').toggleClass('ignored', true)
+                    console.log("*******TESTTESTTESTTEST***********")
+                    console.log(myMixes.target())
+                    console.log(event.target.dataset.mixid)
+                    myMixes.selected = event.target.dataset.mixid
+                    myMixes.target()
+                    console.log(myMixes.target())
+                    includes = myMixes.target().include
+                    excludes = myMixes.target().exclude
+                    console.log(includes, excludes)
+                    includes.forEach(ing =>{
+                       $(ing.split(' ').join('-')).toggleClass('included',true)
+                       $(ing.split(' ').join('-')).toggleClass('ignored excluded',false)
+                    })
+                    excludes.forEach(ing =>{
+                        $(ing.split(' ').join('-')).toggleClass('excluded',true)
+                        $(ing.split(' ').join('-')).toggleClass('ignored included',false)
+                    })
+                    console.log(myMixes.selected)
+                }
+
+
             },
             execute: () => {
                 $(lines.element()).appendTo(lines.target[0])
                 $(lines.results()).appendTo(lines.target[1])
                 $(`#edit-${mixId}`).click(lines.listener)
+                myMixes.selected = `#edit-${mixId}`
             }
         }
 
