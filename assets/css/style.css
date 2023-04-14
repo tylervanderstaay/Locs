@@ -40,10 +40,13 @@
     flex-direction:row;
 
 }
-body{
-    /* background-image:url("../images/bg1.jpg");
-    background-size:contain; */
-    background-color:lightgray;
+body {
+    background-image:url("../images/CosmopolitanCocktail_MFS-WD1-.jpg");
+    background-size:cover;
+    /* background-size: auto; */
+    background-color:rgb(212, 169, 166);
+    font-family: Comfortaa;
+    height: 100%;
 }
 #mix-filters{
     display:flex;
@@ -58,6 +61,8 @@ body{
     height:100px;
     width:180px;
     border-radius:15px;
+
+    
 }
 .mix-container{
     width:25%;
@@ -73,17 +78,28 @@ body{
     align-items:center;
     width:80%;
     padding:15px;
-    border:1px solid black;
+    border:3px solid rgb(137, 81, 59);
+    border-radius: 3px;
 }
 .filter-cat{
-    width: 12%;
+    width: 10%;
     display:flex;
     flex-direction:column;
     justify-items:flex-start;
     align-items:center;
+    gap: 5px;
 }
 .filter-item{
-    background-color:rgba(245, 245, 220, 0.92);
+    background-color:rgba(187, 187, 170, 0.92);
+    /* Made changes here - Aydene*/
+    border-radius: 5px;
+    padding-inline-end: 3px;
+    width: 85%;
+}
+
+.cat-name {
+    font-weight: bolder;
+    font-size: xx-large;
 }
 .tgl-type{
     height:40px;
@@ -93,7 +109,6 @@ body{
     margin:0;
 }
 .filter-container{
-    border:1px solid;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -105,11 +120,11 @@ body{
     height:35px;
 }
 .included{
-    background-color:green;
+    background-color:rgb(62, 146, 62);
     color:white;
 }
 .excluded{
-    background-color:red;
+    background-color:rgb(201, 45, 45);
     color:white;
 }
 .hidden{
@@ -123,7 +138,6 @@ body{
     flex-direction:row;
     flex-wrap:wrap;
     justify-content:space-around;
-    background-color:gray;
 }
 .card-row{
     height:20%;
@@ -146,11 +160,24 @@ body{
     width:48%;
     background-color:black;
 }
-h3{color:white;}
+
+h3 {color:white;
 }
 
 #picture.container {
     display: flex;
     height: 60px;
     background-size: contain;
+}
+
+.welcome-msg {
+    padding: 2px;
+    text-align: center;
+    font-size: x-large;
+    font-weight: bold;
+    padding: 20px;
+}
+
+#top-pg {
+    font-family: Comfortaa;
 }

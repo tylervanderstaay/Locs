@@ -1,26 +1,26 @@
 const categories = {
     alc: {
-        rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
-        whiskey: ["Applejack", "Scotch", "Blended whiskey", "Bourbon", "Irish whiskey", "Firewater", "Whiskey", "Johnnie Walker", "Pisco"],
-        gin: ["Gin", "Ricard"],
-        brandy: ["Apricot brandy", "Brandy", "Cherry brandy", "Apple brandy", "Grapefruit juice", "Cranberries", "Blackberry brandy", "Creme de Cassis"],
-        vodka: ["Lemon vodka", "Vodka", "Peach Vodka", "Absolut Citron"],
-        tequila: ["Tequila"],
-        liqueur: ["Sweet Vermouth", "Strawberry schnapps", "Triple sec", "Kahlua", "Dubonnet Rouge", "Coffee brandy", "Creme de Cacao", "Galliano", "Ouzo", "Spiced rum", "Chocolate liqueur", "Midori melon liqueur", "Sambuca", "Peppermint schnapps", "Coffee liqueur"],
-        vermouth: ["Dry Vermouth"],
-        wine: ["Red wine", "Port", "Sherry", "Cider"],
-        other: ["Pisco", "Irish cream"]
+        Rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
+        Whiskey: ["Applejack", "Scotch", "Blended whiskey", "Bourbon", "Irish whiskey", "Firewater", "Whiskey", "Johnnie Walker", "Pisco"],
+        Gin: ["Gin", "Ricard"],
+        Brandy: ["Apricot brandy", "Brandy", "Cherry brandy", "Apple brandy", "Grapefruit juice", "Cranberries", "Blackberry brandy", "Creme de Cassis"],
+        Vodka: ["Lemon vodka", "Vodka", "Peach Vodka", "Absolut Citron"],
+        Tequila: ["Tequila"],
+        Liqueur: ["Sweet Vermouth", "Strawberry schnapps", "Triple sec", "Kahlua", "Dubonnet Rouge", "Coffee brandy", "Creme de Cacao", "Galliano", "Ouzo", "Spiced rum", "Chocolate liqueur", "Midori melon liqueur", "Sambuca", "Peppermint schnapps", "Coffee liqueur"],
+        Vermouth: ["Dry Vermouth"],
+        Wine: ["Red wine", "Port", "Sherry", "Cider"],
+        Other: ["Pisco", "Irish cream"]
     },
     non: {
-        juice: ["Grapefruit juice", "Apple juice", "Pineapple juice", "Lemon juice", "Tomato juice", "Cranberry juice", "Grape juice", "Peach nectar", "Lemonade"],
-        carbonated: ["Carbonated water", "Sprite", "7-Up", "Lager", "Ale"],
-        bitters: ["Orange bitters", "Bitters"],
-        sugar: ["Sugar", "demerara Sugar", "Sugar syrup"],
-        milk: ["Milk", "Yoghurt", "Heavy cream"],
-        fruit: ["Watermelon", "Strawberries", "Mango", "Cantaloupe", "Berries", "Grapes", "Kiwi", "Orange", "Lime", "Cranberries"],
-        chocolate: ["Chocolate syrup", "Cocoa powder", "Chocolate"],
-        coffee: ["Coffee", "Espresso"],
-        nother: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
+        Juice: ["Grapefruit juice", "Apple juice", "Pineapple juice", "Lemon juice", "Tomato juice", "Cranberry juice", "Grape juice", "Peach nectar", "Lemonade"],
+        Carbonated: ["Carbonated water", "Sprite", "7-Up", "Lager", "Ale"],
+        Bitters: ["Orange bitters", "Bitters"],
+        Sugar: ["Sugar", "demerara Sugar", "Sugar syrup"],
+        Milk: ["Milk", "Yoghurt", "Heavy cream"],
+        Fruit: ["Watermelon", "Strawberries", "Mango", "Cantaloupe", "Berries", "Grapes", "Kiwi", "Orange", "Lime", "Cranberries"],
+        Chocolate: ["Chocolate syrup", "Cocoa powder", "Chocolate"],
+        Coffee: ["Coffee", "Espresso"],
+        other: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
     }
 }
 let itempull = JSON.parse(localStorage.getItem('items')) || {}
@@ -157,7 +157,7 @@ function getIngredients() {
 function createFilterButtons() {
     const lines = {
         type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
-        category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4>${cat}</h4></div>` },
+        category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4 class="cat-name">${cat}</h4></div>` },
         ingredient: (id, data) => {
             return `<button class="filter-item ignored" id="${id}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
         }
