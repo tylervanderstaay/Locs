@@ -59,7 +59,6 @@ let myMixes = {
                 })
             }
             console.log(`EXCLUSIONS: ${idLot.exclusions}`)
-
             highest = 0
             if (mix.include.length > 0) {
                 mix.include.forEach(ingredient => {
@@ -80,7 +79,6 @@ let myMixes = {
                 })
             }
             newSort = {}
-
             Object.keys(searchTag).forEach(included => {
                 if (!idLot.exclusions.includes(included)) {
                     times = searchTag[included].count
@@ -104,7 +102,7 @@ let myMixes = {
         },
         putResults: (results) => {
             const lines = {
-                card: (index) => { return `<div class="result-card" id="c-${index}"><h3>Gin & Tonic</h3></div>` }
+                card: (index, drink) => { return `<div class="result-card" id="c-${index}"><h3>${drink.name}</h3></div>` }
             }
             id = myMixes.selected.split('-')[1]
             target = `#r-${id}`
@@ -112,11 +110,10 @@ let myMixes = {
             if (results.length < 10) {
                 count=results.length
             }
+            $(target).empty()
             for(let i=0;i<count;i++){
-                $(lines.card(i)).appendTo(target)
+                $(lines.card(i,pulls[results[i]])).appendTo(target)
             }
-            
-
         }
 
     }
