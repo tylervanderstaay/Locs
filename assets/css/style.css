@@ -23,6 +23,14 @@
     height:fit-content;
     margin:5px 2px 5px 2px;
 }
+.in-cont{
+    background-color:green;
+    color:white;
+}
+.ex-cont{
+    background-color: red;
+    color:white;
+}
 .included{
     padding:2px;
     background-color:rgb(87, 211, 87);
@@ -124,6 +132,7 @@ body {
     height:35px;
 }
 .included{
+
     background-color:rgb(62, 146, 62);
     color:white;
 }
@@ -157,15 +166,34 @@ body {
     display:flex;
     flex-direction:row;
     flex-wrap:wrap;
+
     background-image: url(../images/flaming_cocktail.jpg);
     background-size: cover;
 }
 .result-card{
+    align-items:end;
+    display:flex;
+    background-size:cover;
     margin:1%;
+
     height:180px;
     width:180px;
     background-color:black;
 }
+.card-title{
+    height:fit-content;
+    font-size:20px;
+    width: fit-content;
+    background-color:rgba(62, 62, 62, 0.6);
+    color:white;
+}
+h3{color:white;}
+.filterp{
+    display:flex;
+    flex-direction:row;
+    height:fit-content;
+}
+
 
 h3 {color:white;
 }
@@ -194,6 +222,5 @@ h3 {color:white;
     color: white;
 }
 
-#p-design {
-    
-}
+
+
