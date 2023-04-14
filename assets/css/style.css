@@ -94,12 +94,8 @@
     background-color:red;
 }
 
-#top-pg {
-    font-family: Alkatra;
-    height: fit-content;
-}
-
 #picture.container {
     display: flex;
     height: 60px;
+    background-size: contain;
 }
