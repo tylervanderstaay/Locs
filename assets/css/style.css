@@ -66,19 +66,24 @@ body {
     justify-content:center;
 }
 #add-mix{
-    height:100px;
+    height:70px;
     width:180px;
-    border-radius:15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: large;
+    background-color: rgb(98, 93, 93, 0.8);
 
     
 }
 .mix-container{
-    width:25%;
+    width:180px;
     display:flex;
     flex-wrap:wrap;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+    background-color: rgb(98, 93, 93, 0.8);
+    border-radius: 15px;
 }
 .mix-header{
     display:flex;
@@ -86,7 +91,6 @@ body {
     align-items:center;
     width:80%;
     padding:15px;
-    border:3px solid rgb(137, 81, 59);
     border-radius: 3px;
 }
 .filter-cat{
@@ -157,21 +161,24 @@ body {
 }
 .response-container{
     width:410px;
-    height:900px;
+    height:fit-content;
     border:1px solid;
     display:flex;
     flex-direction:row;
     flex-wrap:wrap;
-    align-items:start;
+
+    background-image: url(../images/flaming_cocktail.jpg);
+    background-size: cover;
 }
 .result-card{
     align-items:end;
     display:flex;
     background-size:cover;
     margin:1%;
-    height:18%;
-    width:48%;
-    padding-bottom:8px;
+
+    height:180px;
+    width:180px;
+    background-color:black;
 }
 .card-title{
     height:fit-content;
@@ -198,14 +205,22 @@ h3 {color:white;
 }
 
 .welcome-msg {
-    padding: 2px;
+    padding-top: 50px;
     text-align: center;
-    font-size: x-large;
-    font-weight: bold;
-    padding: 20px;
+    font-size: 30px;
+    font-weight: bolder;
+    height: 200px;
+    color: rgb(28, 4, 4);
+    
 }
 
 #top-pg {
     font-family: Comfortaa;
 }
+
+.editfilter:hover {
+    color: white;
+}
+
+
 
