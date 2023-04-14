@@ -23,7 +23,8 @@ const categories = {
         nother: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
     }
 }
-let items = { ...localStorage } || {}
+let itempull = JSON.parse(localStorage.getItem('items')) || {}
+let items = itempull || {}
 function cleanItems() {
     Object.keys(items).forEach(key => {
         let item = items[key]
@@ -31,8 +32,8 @@ function cleanItems() {
     })
     console.log('cleaned')
 }
-cleanItems()
-let pulls = {}
+let drinkpull = JSON.parse(localStorage.getItem('drinks')) || {}
+let pulls = drinkpull || {}
 const mix = {
     alone: true,
     selector: null,
@@ -59,23 +60,19 @@ let myMixes = {
                 })
             }
             console.log(`EXCLUSIONS: ${idLot.exclusions}`)
-            highest = 0
+            console.log(mix.include)
             if (mix.include.length > 0) {
                 mix.include.forEach(ingredient => {
-                    console.log("BEGIN INGREDIENT TESTING*****")
-                    console.log(ingredient)
-                    console.log(items[ingredient])
-                    items[ingredient].forEach(id => {
-                        if (Object.keys(searchTag).includes(id)) {
-                            searchTag[id].count++
-                            if (searchTag[id].count > highest && !idLot.exclusions.includes(searchTag[id])) {
-                                highest = searchTag[id].count
+                    if (ingredient !== undefined) {
+                        items[ingredient].forEach(id => {
+                            if (Object.keys(searchTag).includes(id)) {
+                                searchTag[id].count++
+                                searchTag[id].ings.push(ingredient)
+                            } else {
+                                searchTag[id] = { count: 1, ings: [ingredient] }
                             }
-                            searchTag[id].ings.push(ingredient)
-                        } else {
-                            searchTag[id] = { count: 1, ings: [ingredient] }
-                        }
-                    })
+                        })
+                    }
                 })
             }
             newSort = {}
@@ -106,21 +103,24 @@ let myMixes = {
             }
             id = myMixes.selected.split('-')[1]
             target = `#r-${id}`
-            count=10;
+            count = 10;
             if (results.length < 10) {
-                count=results.length
+                count = results.length
             }
             $(target).empty()
-            for(let i=0;i<count;i++){
-                $(lines.card(i,pulls[results[i]])).appendTo(target)
+            for (let i = 0; i < count; i++) {
+                console.log("***")
+                console.log(pulls[results[i]])
+                console.log("***")
+                $(lines.card(i, pulls[results[i]])).appendTo(target)
             }
         }
 
     }
-,
+    ,
     selected: '',
     target: () => { return myMixes[myMixes.selected] },
-count: 0
+    count: 0
 }
 function getIngredients() {
     let ingredients = [];
@@ -196,6 +196,7 @@ function handleFilterClick(event) {
             let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options);
             response = await response.json()
             idList = []
+            console.log("******************")
             console.log(response)
             response.drinks.forEach((drink) => {
                 if (!Object.keys(pulls).includes(drink.idDrink)) {
@@ -210,12 +211,13 @@ function handleFilterClick(event) {
             })
             console.log(idList)
             items[search] = idList
-            localStorage.setItem(search, JSON.stringify(idList))
-            localStorage.setItem('ids', JSON.stringify(pulls))
-            await idList
+            localStorage.setItem('items', JSON.stringify(items))
+            localStorage.setItem('drinks', JSON.stringify(pulls))
+            console.log("******************")
+            return idList
         }
 
-        checkLocal(ingredient)
+        return checkLocal(ingredient)
     }
 
     function toggleChoice(id, from) {
@@ -241,10 +243,16 @@ function handleFilterClick(event) {
             }
         }
         ostates[event.target.classList[1]]($(`#${id}`))
-        myMixes.f.refresh(myMixes.target())
+        myMixes.f.refresh(myMixes.target(), from)
     }
-    newChoices = searchIngredient(ingredient)
+    searchIngredient(ingredient)
+    newChoices = items[ingredient]
     console.log("****************")
+    console.log("****************")
+    console.log("****************")
+    console.log("****************")
+    console.log(items)
+    console.log(ingredient)
     toggleChoice(id, newChoices)
 
 }
