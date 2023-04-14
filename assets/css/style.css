@@ -147,10 +147,14 @@ body{
     background-color:black;
 }
 h3{color:white;}
-}
+
 
 #picture.container {
     display: flex;
     height: 60px;
     background-size: contain;
 }
+body {
+    background-image: url("../images/flaming_cocktail.jpg");
+    background-color: blanchedalmond;
+  }
