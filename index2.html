@@ -5,27 +5,32 @@
     <title>DrinkAssist - Find your cocktail recipe!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alkatra&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
-    <div class="bg-cover bg-bottom h-52"
-        style="background-image: url(./assets/images/2Make_your_perfect_cocktail_1200_200_px.png);"
-        id="picture-container">
-    </div>
+    <header class="bg-gradient-to-r from-neutral-700" id="top-pg">
+        <h1 class="pt-14 pl-8 italic text-5xl font-semibold text-white">DrinkAssist</h1>
+        <p class="p1 pl-10 pb-1 italic text-xl text-white">Find your cocktail recipe!</p>
+    </header>
+
     <main>
+        <div class="welcome-msg">
+            Welcome to DrinkAssist!
+            Choose from a variety of Alcohol and Mixers and find a recipe for a cocktail!
+        </div>
+        
         <div id="mix-control">
             <button id="add-mix">Click to Add Mix</button>
         </div>
-
-        <div id="mix-filters">
-        </div>
-
         <div class="filter-container hidden">
-            <div class="toggle-container" id="filter-type">
+            <div class="toggle-container" id="w">
                 <space data-tog="alc" id="myButtons">
                     <button class="tgl-type included">
                         Alcohol
@@ -36,13 +41,20 @@
                 </space>
             </div>
             <div class="btn-list" id="filter-window">
-
             </div>
         </div>
 
-        <div id="mix-responses">
+        <div id="mix-filters">
         </div>
 
+        
+        <div>
+            <h4 class="text-base"></h4>
+        </div>
+
+
+        <div id="mix-responses">
+        </div>
     </main>
     <footer>
     </footer>
