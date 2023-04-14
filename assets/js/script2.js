@@ -100,14 +100,30 @@ let myMixes = {
                 console.log(searchTag[item])
             })
             myMixes.target().results = tub
+            myMixes.f.putResults(tub)
         },
-        putResults: () => {
-            target = ``
+        putResults: (results) => {
+            const lines = {
+                card: (index) => { return `<div class="result-card" id="c-${index}"><h3>Gin & Tonic</h3></div>` }
+            }
+            id = myMixes.selected.split('-')[1]
+            target = `#r-${id}`
+            count=10;
+            if (results.length < 10) {
+                count=results.length
+            }
+            for(let i=0;i<count;i++){
+                $(lines.card(i)).appendTo(target)
+            }
+            
+
         }
-    },
+
+    }
+,
     selected: '',
     target: () => { return myMixes[myMixes.selected] },
-    count: 0
+count: 0
 }
 function getIngredients() {
     let ingredients = [];
