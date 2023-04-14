@@ -1,108 +1,147 @@
-.btn-list{
-    min-height:200px;
-    height:fit-content;
-    width:100%;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
+.btn-list {
+    min-height: 200px;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
-.filter-type{
-    min-height:200px;
-    height:fit-content;
-    width:100%;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-}
-.in-cont, .ex-cont{
-    gap:3px;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    width:100%;
-    height:fit-content;
-    margin:5px 2px 5px 2px;
-}
-.in-cont{
-    background-color:green;
-    color:white;
-}
-.ex-cont{
-    background-color: red;
-    color:white;
-}
-.included{
-    padding:2px;
-    background-color:rgb(87, 211, 87);
-    color:rgb(111, 111, 111);
-}
-.excluded{
-    padding:2px;
-    background-color:rgb(244, 64, 32);
-    color:rgb(111, 111, 111);
-}
-.f-type{
-    width:100%;
-    height:50%;
-    display:flex;
-    flex-direction:row;
 
+.filter-type {
+    min-height: 200px;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
+
+.in-cont,
+.ex-cont {
+    gap: 3px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: fit-content;
+    margin: 5px 2px 5px 2px;
+}
+
+.in-cont {
+    background-color: green;
+    color: white;
+}
+
+.ex-cont {
+    background-color: red;
+    color: white;
+}
+
+.included {
+    padding: 2px;
+    background-color: rgb(87, 211, 87);
+    color: rgb(111, 111, 111);
+}
+
+.excluded {
+    padding: 2px;
+    background-color: rgb(244, 64, 32);
+    color: rgb(111, 111, 111);
+}
+
+.f-type {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+}
+    .welcome-msg {
+        padding: 3px 100px 0px;
+        text-align: center;
+        vertical-align: baseline;
+        font-size: 30px;
+        font-weight: bolder;
+        height: 300px;
+        color: rgb(255, 255, 255);
+        background-image: url(../images/Black-Brush-Banner2.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-origin: content-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.6;
+}
+
+p {
+    width: 85%;
+}
+
+
 body {
-    background-image:url("../images/CosmopolitanCocktail_MFS-WD1-.jpg");
-    background-size:cover;
+    background-image: url("../images/CosmopolitanCocktail_MFS-WD1-.jpg");
+    background-size: cover;
     /* background-size: auto; */
-    background-color:rgb(212, 169, 166);
+    background-color: rgb(212, 169, 166);
     font-family: Comfortaa;
     height: 100%;
+    z-index: -1;
 }
-#mix-filters{
-    display:flex;
-    flex-direction:row;
-    justify-content:space-around;
+
+#mix-filters {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
-#mix-control{
-    display:flex;
-    justify-content:center;
+
+#mix-control {
+    display: flex;
+    justify-content: center;
 }
-#add-mix{
-    height:70px;
-    width:180px;
+
+#add-mix {
+    height: 70px;
+    width: 180px;
     border-radius: 15px;
     font-weight: bold;
     font-size: large;
     background-color: rgb(98, 93, 93, 0.8);
 
-    
+
 }
-.mix-container{
-    width:180px;
-    display:flex;
-    flex-wrap:wrap;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+
+.mix-container {
+    width: 180px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: rgb(98, 93, 93, 0.8);
     border-radius: 15px;
 }
-.mix-header{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    width:80%;
-    padding:15px;
+
+.mix-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    padding: 15px;
     border-radius: 3px;
 }
-.filter-cat{
+
+.filter-cat {
     width: 10%;
-    display:flex;
-    flex-direction:column;
-    justify-items:flex-start;
-    align-items:center;
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-start;
+    align-items: center;
     gap: 5px;
 }
-.filter-item{
-    background-color:rgba(187, 187, 170, 0.92);
+
+.filter-item {
+    background-color: rgba(187, 187, 170, 0.92);
     /* Made changes here - Aydene*/
     border-radius: 5px;
     padding-inline-end: 3px;
@@ -113,89 +152,107 @@ body {
     font-weight: bolder;
     font-size: xx-large;
 }
-.tgl-type{
-    height:40px;
-    width:120px;
-    gap:0;
-    border:0;
-    margin:0;
-}
-.filter-container{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:10px;
-}
-.liq{
-    gap:2px;
-    width: 100px;
-    height:35px;
-}
-.included{
 
-    background-color:rgb(62, 146, 62);
-    color:white;
+.tgl-type {
+    height: 40px;
+    width: 120px;
+    gap: 0;
+    border: 0;
+    margin: 0;
 }
-.excluded{
-    background-color:rgb(201, 45, 45);
-    color:white;
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
 }
-.hidden{
-    display:none;
+
+.liq {
+    gap: 2px;
+    width: 100px;
+    height: 35px;
 }
-.unfocus{
-    filter:blur(2px);
+
+.included {
+
+    background-color: rgb(62, 146, 62);
+    color: white;
 }
-#mix-responses{
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    justify-content:space-around;
+
+.excluded {
+    background-color: rgb(201, 45, 45);
+    color: white;
 }
-.card-row{
-    height:20%;
-    width:100%;
-    display:flex;
-    align-content:space-around;
-    justify-content:space-around;
+
+.hidden {
+    display: none;
 }
-.response-container{
-    width:410px;
-    height:fit-content;
-    border:1px solid;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
+
+.unfocus {
+    filter: blur(2px);
+}
+
+#mix-responses {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.card-row {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    align-content: space-around;
+    justify-content: space-around;
+}
+
+.response-container {
+    width: 410px;
+    height: fit-content;
+    border: 1px solid;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
     background-image: url(../images/flaming_cocktail.jpg);
     background-size: cover;
 }
-.result-card{
-    align-items:end;
-    display:flex;
-    background-size:cover;
-    margin:1%;
 
-    height:180px;
-    width:180px;
-    background-color:black;
+.result-card {
+    align-items: end;
+    display: flex;
+    background-size: cover;
+    margin: 1%;
+
+    height: 180px;
+    width: 180px;
+    background-color: black;
 }
-.card-title{
-    height:fit-content;
-    font-size:20px;
+
+.card-title {
+    height: fit-content;
+    font-size: 20px;
     width: fit-content;
-    background-color:rgba(62, 62, 62, 0.6);
-    color:white;
+    background-color: rgba(62, 62, 62, 0.6);
+    color: white;
 }
-h3{color:white;}
-.filterp{
-    display:flex;
-    flex-direction:row;
-    height:fit-content;
+
+h3 {
+    color: white;
+}
+
+.filterp {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
 }
 
 
-h3 {color:white;
+h3 {
+    color: white;
 }
 
 #picture.container {
@@ -204,15 +261,16 @@ h3 {color:white;
     background-size: contain;
 }
 
-.welcome-msg {
+/* .welcome-msg {
     padding-top: 50px;
     text-align: center;
     font-size: 30px;
     font-weight: bolder;
     height: 200px;
     color: rgb(28, 4, 4);
+    background-image: url(../images/Black-Brush-Banner.png);
     
-}
+} */
 
 #top-pg {
     font-family: Comfortaa;
@@ -221,6 +279,3 @@ h3 {color:white;
 .editfilter:hover {
     color: white;
 }
-
-
-
