@@ -6,7 +6,7 @@
     flex-direction:row;
     flex-wrap:wrap;
 }
-.f-type{
+.filter-type{
     min-height:200px;
     height:fit-content;
     width:100%;
@@ -40,6 +40,16 @@
     flex-direction:row;
 
 }
+body{
+    /* background-image:url("../images/bg1.jpg");
+    background-size:contain; */
+    background-color:lightgray;
+}
+#mix-filters{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+}
 #mix-control{
     display:flex;
     justify-content:center;
@@ -50,6 +60,7 @@
     border-radius:15px;
 }
 .mix-container{
+    width:25%;
     display:flex;
     flex-wrap:wrap;
     flex-direction:column;
@@ -57,41 +68,85 @@
     align-items:center;
 }
 .mix-header{
-    width:23%;
-}
-#test{
     display:flex;
     flex-direction:column;
-}
-.mix-header{
-    width:23%;
+    align-items:center;
+    width:80%;
     padding:15px;
     border:1px solid black;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
 }
-.f-cat{
+.filter-cat{
     width: 12%;
     display:flex;
     flex-direction:column;
     justify-items:flex-start;
     align-items:center;
 }
-.f-item{
-    background-color:rgba(245, 245, 220, 0.069);
+.filter-item{
+    background-color:rgba(245, 245, 220, 0.92);
 }
-
+.tgl-type{
+    height:40px;
+    width:120px;
+    gap:0;
+    border:0;
+    margin:0;
+}
+.filter-container{
+    border:1px solid;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:10px;
+}
 .liq{
     gap:2px;
     width: 100px;
     height:35px;
 }
-.in{
+.included{
     background-color:green;
+    color:white;
 }
-.ex{
+.excluded{
     background-color:red;
+    color:white;
+}
+.hidden{
+    display:none;
+}
+.unfocus{
+    filter:blur(2px);
+}
+#mix-responses{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:space-around;
+    background-color:gray;
+}
+.card-row{
+    height:20%;
+    width:100%;
+    display:flex;
+    align-content:space-around;
+    justify-content:space-around;
+}
+.response-container{
+    width:410px;
+    height:900px;
+    border:1px solid;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+}
+.result-card{
+    margin:1%;
+    height:18%;
+    width:48%;
+    background-color:black;
+}
+h3{color:white;}
 }
 
 #picture.container {

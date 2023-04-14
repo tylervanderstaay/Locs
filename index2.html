@@ -20,34 +20,31 @@
         <div id="mix-control">
             <button id="add-mix">Click to Add Mix</button>
         </div>
-        <div class="btn-list">
-        </div>
+
         <div id="mix-filters">
-            <div class="mix-container" id="m-1">
-                <div class="mix-header" id="h-1">
-                    <h2>Mix 1</h2>
-                    <div id="filter-container" id="f-1">
-                        <div class="in-cont" id="i-1">
-                            <filter class="included">test</filter>
+        </div>
 
-                        </div>
-                        <div class="ex-cont" id="e-1">
-                            <filter class="excluded">test</filter>
+        <div class="filter-container hidden">
+            <div class="toggle-container" id="filter-type">
+                <space data-tog="alc" id="myButtons">
+                    <button class="tgl-type included">
+                        Alcohol
+                    </button>
+                    <button class="tgl-type ignored">
+                        Non-Alcohol
+                    </button>
+                </space>
+            </div>
+            <div class="btn-list" id="filter-window">
 
-                        </div>
-                    </div>
-                    <button id="openFilter">Edit Filter</button>
-
-                </div>
-                <div class="mix-results" id="r-1">
-                </div>
             </div>
         </div>
+
+        <div id="mix-responses">
+        </div>
+
     </main>
-
     <footer>
-
-
     </footer>
     <script src="./assets/js/script2.js"></script>
 </body>
