@@ -40,7 +40,8 @@ const mix = {
 }
 let myMixes = {
     f: {
-        refresh: (mix, from) => {
+        refresh: (mix) => {
+            console.log(mix)
             finalTub = []
             searchTag = {}
             empty = false
@@ -48,9 +49,10 @@ let myMixes = {
                 inclusions: [],
                 exclusions: []
             }
+            let newLot = []
             if (mix.exclude.length > 0) {
                 mix.exclude.forEach(ingredient => {
-                    let newLot = [...idLot.exclusions, ...items[ingredient]]
+                    newLot = [...idLot.exclusions, ...items[ingredient]]
                     idLot.exclusions = newLot
                 })
             }
@@ -80,17 +82,27 @@ let myMixes = {
                 }
             })
             tub = []
+            console.log("***************")
+            console.log(searchTag)
             for (let i = Object.keys(newSort).length; i > 0; i--) {
                 tub = [...tub, ...newSort[i]]
             }
+            console.log(tub)
+            console.log("***************")
+
             myMixes.target().results = tub
+            myMixes.f.putFilters(mix.include, mix.exclude)
             myMixes.f.putResults(tub)
-            myMixes.f.putFilters(mix.include,mix.exclude)
-            
+
         },
         putResults: (results) => {
+            console.log("**********************************************************")
+            console.log(results)
             const lines = {
-                card: (index, drink) => { return `<div class="result-card" id="c-${index}"><h3>${drink.name}</h3></div>` }
+                card: (index, drink) => {
+                    console.log("HERE HERHER HER HERHERHE REHRE HRE RH")
+                    console.log(drink)
+                    return `<div class="result-card" id="c-${index}"><div class="card-count">${3}<div class="card-title">${drink.name}</div></div>` }
             }
             id = myMixes.selected.split('-')[1]
             target = `#r-${id}`
@@ -99,38 +111,38 @@ let myMixes = {
                 count = results.length
             }
             $(target).empty()
-            for (let i = 0; i < count; i++) {
-                $(lines.card(i, pulls[results[i]])).appendTo(target)
+            for (let i = 0; i < count + 1; i++) {
+                drinkinfo = pulls[results[i]]
+                console.log(drinkinfo)
+                newEl = $(lines.card(i, pulls[results[i]]))
+                newEl.appendTo(target)
+                newEl.css(`background-image`, `url(${pulls[results[i]].img})`)
             }
         },
-        putFilters:(included,excluded)=>{
+        putFilters: (included, excluded) => {
             const lines = {
-                header:(ing)=>{
-                    return `<p>${ing}</p>`
+                header: (to, ing) => {
+                    if (to === 1) {
+                        return `<p class="included">${ing}</p>`
+                    } else if (to === 0) {
+                        return `<p class="excluded">${ing}</p>`
+                    }
                 }
 
             }
             id = myMixes.selected.split('-')[1]
-            target = [`#included-${id}`,`#excluded-${id}`]
+            target = [`#included-${id}`, `#excluded-${id}`]
             $(target[0]).empty()
             $(target[1]).empty()
-            console.log("**************in")
-            console.log(included)
             included.forEach(ing => {
                 console.log(ing)
                 console.log(target[0])
-                $(lines.header(ing)).appendTo(target[0])
+                $(lines.header(1, ing)).appendTo(target[0])
             })
-            console.log("**************ex")
-            console.log(excluded)
             excluded.forEach(exc => {
-                console.log(exc)
-                console.log(target[1])
-                $(lines.header(exc)).appendTo(target[1])
+                $(lines.header(1, exc)).appendTo(target[1])
             })
-            console.log("**********************")
         }
-
     }
     ,
     selected: '',
@@ -187,10 +199,10 @@ function createFilterButtons() {
     })
     $('#non').toggleClass('hidden')
 }
+
 function handleFilterClick(event) {
     const id = event.target.id
     const targetData = event.target.dataset.tags.split(" ")
-    const category = targetData[1]
     const ingredient = targetData[2].split('-').join(' ')
 
     function searchIngredient(ingredient) {
@@ -205,61 +217,69 @@ function handleFilterClick(event) {
             }
         }
         async function fetchData(search) {
-            const options = { method: "GET" };
-            let response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options);
-            response = await response.json()
-            idList = []
-            response.drinks.forEach((drink) => {
-                if (!Object.keys(pulls).includes(drink.idDrink)) {
-                    thisObj = {
-                        status: 0,
-                        name: drink.strDrink,
-                        img: drink.strDrinkThumb
-                    }
-                    pulls[drink.idDrink] = thisObj
-                    idList.push(drink.idDrink)
-                }
-            })
-            items[search] = idList
-            localStorage.setItem('items', JSON.stringify(items))
-            localStorage.setItem('drinks', JSON.stringify(pulls))
-            return idList
-        }
+            let idList = []
+            const options = { method: 'GET' };
+            await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
+                .then(response => response.json()
+                )
+                .then(response => {
+                    console.log(response)
+                    response.drinks.forEach(drink => {
+                        if (!Object.keys(pulls).includes(drink.idDrink)) {
+                            thisObj = {
+                                status: 0,
+                                name: drink.strDrink,
+                                img: drink.strDrinkThumb
+                            }
+                            pulls[drink.idDrink] = thisObj
+                            idList.push(drink.idDrink)
+                        }
+                    })
+                    return
+                })
+                .catch(err => console.error(err));
 
-        return checkLocal(ingredient)
+            setTimeout(() => {
+                items[search] = idList
+                localStorage.setItem('items', JSON.stringify(items))
+                localStorage.setItem('drinks', JSON.stringify(pulls))
+                return idList
+            }, 100)
+        }
+        checkLocal(ingredient)
     }
 
-    function toggleChoice(id, from) {
+    function toggleChoice(id) {
         ostates = {
             ignored: (target) => {
                 target.toggleClass('ignored')
                 if (!myMixes.target().include.includes(ingredient)) {
                     myMixes.target().include.push(ingredient)
                     target.toggleClass('included')
-                    myMixes.f.refresh(myMixes.target(), from)
                 }
             },
             included: (target) => {
-                target.toggleClass('included')
                 target.toggleClass('excluded')
+                target.toggleClass('included')
+                ind = myMixes.target().include.indexOf(ingredient)
+                myMixes.target().include.splice(ind, 1);
                 myMixes.target().exclude.push(ingredient)
-                myMixes.target().include.splice(ingredient, 1)
-                myMixes.f.refresh(myMixes.target(), from)
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
                 target.toggleClass('ignored')
-                myMixes.target().exclude.splice(ingredient, 1)
-                myMixes.f.refresh(myMixes.target(), from)
+                ind = myMixes.target().exclude.indexOf(ingredient)
+                myMixes.target().exclude.splice(ind, 1)
             }
         }
-        ostates[event.target.classList[1]]($(`#${id}`))
-        
+        currentclass = event.target.classList[1]
+        ostates[currentclass]($(`#${id}`))
     }
-    
     searchIngredient(ingredient)
-    newChoices = items[ingredient]
-    toggleChoice(id, newChoices)
+    toggleChoice(id)
+    setTimeout(() => {
+        myMixes.f.refresh(myMixes.target())
+    }, 300)
 
 }
 function newMix() {
@@ -277,7 +297,7 @@ function newMix() {
         const lines = {
             target: [$('#mix-filters'), $("#mix-responses")],
             element: () => {
-                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="in-cont" id="included-${mixId}"></div><div class="ex-cont" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}" data-mixid="mix-${mixId}">Edit Filter</button></div></div>`;
+                return `<div class="mix-container" id="mix-${mixId}"><div class="mix-header" id="header-${mixId}"><h2>Mix ${mixId}</h2><div id="filter-container" id="filter-${mixId}"><div class="filterp" id="included-${mixId}"></div><div class="filterp" id="excluded-${mixId}"></div></div><button class="editFilter" id="edit-${mixId}" data-mixid="mix-${mixId}">Edit Filter</button></div></div>`;
             },
             results: () => {
                 return `<div class="response-container" id="r-${mixId}"></div>`
