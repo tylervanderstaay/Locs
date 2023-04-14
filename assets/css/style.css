@@ -147,3 +147,10 @@ body{
     background-color:black;
 }
 h3{color:white;}
+}
+
+#picture.container {
+    display: flex;
+    height: 60px;
+    background-size: contain;
+}
