@@ -49,60 +49,108 @@ let myMixes = {
                 inclusions: [],
                 exclusions: []
             }
-            let newLot = []
+            console.log("***************")
+            console.log(mix.exclude)
+            console.log(mix.exclude.length)
+            console.log(idLot.exclusions)
             if (mix.exclude.length > 0) {
                 mix.exclude.forEach(ingredient => {
-                    newLot = [...idLot.exclusions, ...items[ingredient]]
-                    idLot.exclusions = newLot
+                    console.log(idLot.exclusions)
+                    idLot.exclusions = [...idLot.exclusions, ...items[ingredient]]
+                    console.log(idLot.exclusions)
                 })
             }
             if (mix.include.length > 0) {
                 mix.include.forEach(ingredient => {
-                    if (items[ingredient] !== undefined) {
-                        items[ingredient].forEach(id => {
-                            if (Object.keys(searchTag).includes(id)) {
-                                searchTag[id].count++
-                                searchTag[id].ings.push(ingredient)
-                            } else {
-                                searchTag[id] = { count: 1, ings: [ingredient] }
+                    let waiting = true;
+                    check = 0;
+                    while (waiting === true) {
+                        if (items[ingredient] !== undefined) {
+                            idLot.inclusions = [...idLot.inclusions, ...items[ingredient]]
+                            items[ingredient].forEach(id => {
+                                if (Object.keys(searchTag).includes(id)) {
+                                    searchTag[id].count++
+                                    searchTag[id].ings.push(ingredient)
+                                } else {
+                                    searchTag[id] = { count: 1, ings: [ingredient] }
+                                }
+                            })
+                            waiting = false;
+                        } else {
+                            check++
+                            if (check === 10) {
+                                waiting = false;
                             }
-                        })
+                            console.log("Still waiting")
+                            console.log("Still waiting")
+                            console.log("Still waiting")
+                        }
                     }
                 })
             }
+            console.log(searchTag)
             newSort = {}
-            Object.keys(searchTag).forEach(included => {
+            console.log("*INCLUSIONS*")
+            console.log(idLot.inclusions)
+            idLot.inclusions.forEach(included => {
                 if (!idLot.exclusions.includes(included)) {
-                    times = searchTag[included].count
-                    if (newSort[times] === undefined || newSort[times].length === 0) {
-                        newSort[times] = [included]
-                    } else {
-                        newSort[times].push(included)
-                    }
+                    console.log("******")
+                    console.log("******")
+                    console.log("******")
+                    console.log(included)
+                    quant = 0
+                    console.log(pulls[included])
+                    pulls[included].ings.forEach(ing => {
+                        if (mix.include.includes(ing)) {
+                            quant++
+                        }
+                    })
+                    newSort[included] = quant
                 }
             })
-            tub = []
-            console.log("***************")
-            console.log(searchTag)
-            for (let i = Object.keys(newSort).length; i > 0; i--) {
-                tub = [...tub, ...newSort[i]]
+            console.log("******")
+            console.log("******")
+            console.log("******")
+            console.log("******")
+            console.log(newSort)
+            stub = {}
+            Object.keys(newSort).forEach(id => {
+                if (stub[newSort[id]] !== undefined) {
+                    stub[newSort[id]] = [...stub[newSort[id]], id]
+                } else {
+                    stub[newSort[id]] = [id]
+                }
+            })
+
+            console.log("************** stub")
+            console.log(stub)
+            nstub = []
+            for (let i = Object.keys(stub).length; i > 0; i--) {
+                ostub = stub[i]
+                ostub.forEach(id => {
+                    nstub.push(id)
+                })
+                console.log(nstub)
             }
-            console.log(tub)
-            console.log("***************")
-
-            myMixes.target().results = tub
+            console.log(nstub)
+            myMixes.target().results = nstub
             myMixes.f.putFilters(mix.include, mix.exclude)
-            myMixes.f.putResults(tub)
-
+            myMixes.f.putResults(nstub)
         },
         putResults: (results) => {
-            console.log("**********************************************************")
             console.log(results)
             const lines = {
                 card: (index, drink) => {
-                    console.log("HERE HERHER HER HERHERHE REHRE HRE RH")
+                    console.log(myMixes.target().include)
+                    quant = 0;
+                    drink.ings.forEach(ing => {
+                        if (myMixes.target().include.includes(ing)) {
+                            quant++
+                        }
+                    })
                     console.log(drink)
-                    return `<div class="result-card" id="c-${index}"><div class="card-count">${3}<div class="card-title">${drink.name}</div></div>` }
+                    return `<div class="result-card" id="c-${index}"><div class="card-count">${quant}<div class="card-title">${drink.name}</div></div>`
+                }
             }
             id = myMixes.selected.split('-')[1]
             target = `#r-${id}`
@@ -111,7 +159,7 @@ let myMixes = {
                 count = results.length
             }
             $(target).empty()
-            for (let i = 0; i < count + 1; i++) {
+            for (let i = 0; i < count; i++) {
                 drinkinfo = pulls[results[i]]
                 console.log(drinkinfo)
                 newEl = $(lines.card(i, pulls[results[i]]))
@@ -128,7 +176,6 @@ let myMixes = {
                         return `<p class="excluded">${ing}</p>`
                     }
                 }
-
             }
             id = myMixes.selected.split('-')[1]
             target = [`#included-${id}`, `#excluded-${id}`]
@@ -171,7 +218,7 @@ function createFilterButtons() {
         type: (type) => { return `<div class="filter-type" id="${type}"></div>` },
         category: (cat) => { return `<div class="filter-cat" id="${cat}"><h4 class="cat-name">${cat}</h4></div>` },
         ingredient: (id, data) => {
-            return `<button class="filter-item ignored" id="${id}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
+            return `<button class="filter-item ignored" id="${data[2]}" data-tags="${data[0]} ${data[1]} ${data[2]}">${data[2].split("-").join(" ")}</button>`
         }
     }
     //This block below iterates through our categories object at the top looping first through the two main [types],
@@ -219,7 +266,7 @@ function handleFilterClick(event) {
         async function fetchData(search) {
             let idList = []
             const options = { method: 'GET' };
-            await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
+            fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${search}`, options)
                 .then(response => response.json()
                 )
                 .then(response => {
@@ -229,13 +276,15 @@ function handleFilterClick(event) {
                             thisObj = {
                                 status: 0,
                                 name: drink.strDrink,
-                                img: drink.strDrinkThumb
+                                img: drink.strDrinkThumb,
+                                ings: [search]
                             }
                             pulls[drink.idDrink] = thisObj
                             idList.push(drink.idDrink)
+                        } else {
+                            pulls[drink.idDrink].ings.push(search)
                         }
                     })
-                    return
                 })
                 .catch(err => console.error(err));
 
@@ -244,42 +293,49 @@ function handleFilterClick(event) {
                 localStorage.setItem('items', JSON.stringify(items))
                 localStorage.setItem('drinks', JSON.stringify(pulls))
                 return idList
-            }, 100)
+            }, 500)
         }
         checkLocal(ingredient)
     }
 
-    function toggleChoice(id) {
+    function toggleChoice(id, cont) {
         ostates = {
             ignored: (target) => {
                 target.toggleClass('ignored')
-                if (!myMixes.target().include.includes(ingredient)) {
-                    myMixes.target().include.push(ingredient)
-                    target.toggleClass('included')
+                target.toggleClass('included')
+                if (cont === 1) {
+                    if (!myMixes.target().include.includes(ingredient)) {
+                        myMixes.target().include.push(ingredient)
+                    }
                 }
             },
             included: (target) => {
-                target.toggleClass('excluded')
                 target.toggleClass('included')
-                ind = myMixes.target().include.indexOf(ingredient)
-                myMixes.target().include.splice(ind, 1);
-                myMixes.target().exclude.push(ingredient)
+                target.toggleClass('excluded')
+                if (cont === 1) {
+                    ind = myMixes.target().include.indexOf(ingredient)
+                    myMixes.target().include.splice(ind, 1);
+                    myMixes.target().exclude.push(ingredient)
+                }
             },
             excluded: (target) => {
                 target.toggleClass('excluded')
                 target.toggleClass('ignored')
-                ind = myMixes.target().exclude.indexOf(ingredient)
-                myMixes.target().exclude.splice(ind, 1)
+                if (cont === 1) {
+                    ind = myMixes.target().exclude.indexOf(ingredient)
+                    myMixes.target().exclude.splice(ind, 1)
+                }
             }
         }
         currentclass = event.target.classList[1]
         ostates[currentclass]($(`#${id}`))
     }
     searchIngredient(ingredient)
-    toggleChoice(id)
+
+    toggleChoice(id, 1)
     setTimeout(() => {
         myMixes.f.refresh(myMixes.target())
-    }, 300)
+    }, 800)
 
 }
 function newMix() {
@@ -303,14 +359,38 @@ function newMix() {
                 return `<div class="response-container" id="r-${mixId}"></div>`
             },
             listener: (event) => {
-                myMixes.selected = event.target.dataset.mixid
-                console.log(myMixes.selected)
-                $('.filter-container').toggleClass("hidden")
+                if (myMixes.selected === event.target.dataset.mixid) {
+                    $('.filter-container').toggleClass("hidden")
+                } else {
+                    $('.filter-item').toggleClass('included excluded', false)
+                    $('.filter-item').toggleClass('ignored', true)
+                    console.log("*******TESTTESTTESTTEST***********")
+                    console.log(myMixes.target())
+                    console.log(event.target.dataset.mixid)
+                    myMixes.selected = event.target.dataset.mixid
+                    myMixes.target()
+                    console.log(myMixes.target())
+                    includes = myMixes.target().include
+                    excludes = myMixes.target().exclude
+                    console.log(includes, excludes)
+                    includes.forEach(ing =>{
+                       $(ing.split(' ').join('-')).toggleClass('included',true)
+                       $(ing.split(' ').join('-')).toggleClass('ignored excluded',false)
+                    })
+                    excludes.forEach(ing =>{
+                        $(ing.split(' ').join('-')).toggleClass('excluded',true)
+                        $(ing.split(' ').join('-')).toggleClass('ignored included',false)
+                    })
+                    console.log(myMixes.selected)
+                }
+
+
             },
             execute: () => {
                 $(lines.element()).appendTo(lines.target[0])
                 $(lines.results()).appendTo(lines.target[1])
                 $(`#edit-${mixId}`).click(lines.listener)
+                myMixes.selected = `#edit-${mixId}`
             }
         }
 
