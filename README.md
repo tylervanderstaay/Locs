@@ -10,4 +10,6 @@
 
 ![flaming_cocktail](assets/images/flaming_cocktail.jpg)
 
-*deployed link here*
+[https://tylervanderstaay.github.io/Locs/]
+
+[https://github.com/tylervanderstaay/Locs.git]
