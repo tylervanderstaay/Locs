@@ -1,26 +1,26 @@
 const categories = {
     alc: {
-        Rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
-        Whiskey: ["Applejack", "Scotch", "Blended whiskey", "Bourbon", "Irish whiskey", "Firewater", "Whiskey", "Johnnie Walker", "Pisco"],
-        Gin: ["Gin", "Ricard"],
-        Brandy: ["Apricot brandy", "Brandy", "Cherry brandy", "Apple brandy", "Grapefruit juice", "Cranberries", "Blackberry brandy", "Creme de Cassis"],
-        Vodka: ["Lemon vodka", "Vodka", "Peach Vodka", "Absolut Citron"],
-        Tequila: ["Tequila"],
-        Liqueur: ["Sweet Vermouth", "Strawberry schnapps", "Triple sec", "Kahlua", "Dubonnet Rouge", "Coffee brandy", "Creme de Cacao", "Galliano", "Ouzo", "Spiced rum", "Chocolate liqueur", "Midori melon liqueur", "Sambuca", "Peppermint schnapps", "Coffee liqueur"],
-        Vermouth: ["Dry Vermouth"],
-        Wine: ["Red wine", "Port", "Sherry", "Cider"],
-        Other: ["Pisco", "Irish cream"]
+        rum: ["Light rum", "Dark rum", "Añejo rum", "Rum"],
+        whiskey: ["Applejack", "Scotch", "Blended whiskey", "Bourbon", "Irish whiskey", "Firewater", "Whiskey", "Johnnie Walker", "Pisco"],
+        gin: ["Gin", "Ricard"],
+        brandy: ["Apricot brandy", "Brandy", "Cherry brandy", "Apple brandy", "Grapefruit juice", "Cranberries", "Blackberry brandy", "Creme de Cassis"],
+        vodka: ["Lemon vodka", "Vodka", "Peach Vodka", "Absolut Citron"],
+        tequila: ["Tequila"],
+        liqueur: ["Sweet Vermouth", "Strawberry schnapps", "Triple sec", "Kahlua", "Dubonnet Rouge", "Coffee brandy", "Creme de Cacao", "Galliano", "Ouzo", "Spiced rum", "Chocolate liqueur", "Midori melon liqueur", "Sambuca", "Peppermint schnapps", "Coffee liqueur"],
+        vermouth: ["Dry Vermouth"],
+        wine: ["Red wine", "Port", "Sherry", "Cider"],
+        other: ["Pisco", "Irish cream"]
     },
     non: {
-        Juice: ["Grapefruit juice", "Apple juice", "Pineapple juice", "Lemon juice", "Tomato juice", "Cranberry juice", "Grape juice", "Peach nectar", "Lemonade"],
-        Carbonated: ["Carbonated water", "Sprite", "7-Up", "Lager", "Ale"],
-        Bitters: ["Orange bitters", "Bitters"],
-        Sugar: ["Sugar", "demerara Sugar", "Sugar syrup"],
-        Milk: ["Milk", "Yoghurt", "Heavy cream"],
-        Fruit: ["Watermelon", "Strawberries", "Mango", "Cantaloupe", "Berries", "Grapes", "Kiwi", "Orange", "Lime", "Cranberries"],
-        Chocolate: ["Chocolate syrup", "Cocoa powder", "Chocolate"],
-        Coffee: ["Coffee", "Espresso"],
-        other: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
+        juice: ["Grapefruit juice", "Apple juice", "Pineapple juice", "Lemon juice", "Tomato juice", "Cranberry juice", "Grape juice", "Peach nectar", "Lemonade"],
+        carbonated: ["Carbonated water", "Sprite", "7-Up", "Lager", "Ale"],
+        bitters: ["Orange bitters", "Bitters"],
+        sugar: ["Sugar", "demerara Sugar", "Sugar syrup"],
+        milk: ["Milk", "Yoghurt", "Heavy cream"],
+        fruit: ["Watermelon", "Strawberries", "Mango", "Cantaloupe", "Berries", "Grapes", "Kiwi", "Orange", "Lime", "Cranberries"],
+        chocolate: ["Chocolate syrup", "Cocoa powder", "Chocolate"],
+        coffee: ["Coffee", "Espresso"],
+        nother: ["Angelica root", "Water", "Egg yolk", "Egg", "Apple cider", "Everclear", "Firewater", "Tea"]
     }
 }
 let itempull = JSON.parse(localStorage.getItem('items')) || {}
@@ -88,15 +88,9 @@ let myMixes = {
                     }
                 })
             }
-            console.log(searchTag)
             newSort = {}
-            console.log("*INCLUSIONS*")
-            console.log(idLot.inclusions)
             idLot.inclusions.forEach(included => {
                 if (!idLot.exclusions.includes(included)) {
-                    console.log("******")
-                    console.log("******")
-                    console.log("******")
                     console.log(included)
                     quant = 0
                     console.log(pulls[included])
@@ -108,10 +102,7 @@ let myMixes = {
                     newSort[included] = quant
                 }
             })
-            console.log("******")
-            console.log("******")
-            console.log("******")
-            console.log("******")
+
             console.log(newSort)
             stub = {}
             Object.keys(newSort).forEach(id => {
@@ -122,8 +113,7 @@ let myMixes = {
                 }
             })
 
-            console.log("************** stub")
-            console.log(stub)
+
             nstub = []
             for (let i = Object.keys(stub).length; i > 0; i--) {
                 ostub = stub[i]
@@ -140,7 +130,7 @@ let myMixes = {
         putResults: (results) => {
             console.log(results)
             const lines = {
-                card: (index, drink) => {
+                card: (index, drink, drinkid) => {
                     console.log(myMixes.target().include)
                     quant = 0;
                     drink.ings.forEach(ing => {
@@ -149,7 +139,7 @@ let myMixes = {
                         }
                     })
                     console.log(drink)
-                    return `<div class="result-card" id="c-${index}"><div class="card-count">${quant}<div class="card-title">${drink.name}</div></div>`
+                    return `<div class="result-card" id="c-${index}" data-did="${drinkid}"><div class="card-title">${drink.name}</div><div class="card-count">${quant}</div></div>`
                 }
             }
             id = myMixes.selected.split('-')[1]
@@ -162,9 +152,14 @@ let myMixes = {
             for (let i = 0; i < count; i++) {
                 drinkinfo = pulls[results[i]]
                 console.log(drinkinfo)
-                newEl = $(lines.card(i, pulls[results[i]]))
+                newEl = $(lines.card(i, pulls[results[i]], results[i]))
                 newEl.appendTo(target)
                 newEl.css(`background-image`, `url(${pulls[results[i]].img})`)
+                newEl.click((event) => {
+                    $('main1').toggleClass('hidden')
+                    $('main2').toggleClass('hidden')
+                    console.log(event.target.dataset.did);
+                })
             }
         },
         putFilters: (included, excluded) => {
@@ -187,7 +182,7 @@ let myMixes = {
                 $(lines.header(1, ing)).appendTo(target[0])
             })
             excluded.forEach(exc => {
-                $(lines.header(1, exc)).appendTo(target[1])
+                $(lines.header(0, exc)).appendTo(target[1])
             })
         }
     }
@@ -196,6 +191,9 @@ let myMixes = {
     target: () => { return myMixes[myMixes.selected] },
     count: 0
 }
+
+
+
 function getIngredients() {
     let ingredients = [];
     if (Object.keys(items).includes("ingredients")) {
@@ -212,6 +210,36 @@ function getIngredients() {
             })
             .catch(err => console.error(err));
     }
+}
+function getDrink() {
+    const options = { method: 'GET' };
+
+    fetch('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=15346', options)
+        .then(response => response.json())
+        .then(response => {
+            let ingredients = []
+            $('#drinkname').text(response.drinks[0].strDrink)
+            for (let i = 1; i < 15; i++) {
+                if (response.drinks[0][`strIngredient${i}`] !== null) {
+                    console.log(response.drinks[0][`strIngredient${i}`])
+                    ingredients.push(`${response.drinks[0][`strIngredient${i}`]}-${response.drinks[0][`strMeasure${i}`]}`)
+                } else {
+                    break
+                }
+            }
+            $(".ingcol").empty()
+            ingredients.forEach(ing => {
+                console.log(ing)
+                let ning = ing.split('-')
+                nel1 = `<h2>${ning[0]}</h2>`
+                nel2 = `<h2>${ning[1]}</h2>`
+                console.log(nel1, nel2)
+                $(nel1).appendTo($(".ingcol"))
+                $(nel2).appendTo($(".measurecol"))
+            })
+            console.log('success')
+        })
+        .catch(err => console.error(err));
 }
 function createFilterButtons() {
     const lines = {
@@ -246,7 +274,6 @@ function createFilterButtons() {
     })
     $('#non').toggleClass('hidden')
 }
-
 function handleFilterClick(event) {
     const id = event.target.id
     const targetData = event.target.dataset.tags.split(" ")
@@ -373,13 +400,13 @@ function newMix() {
                     includes = myMixes.target().include
                     excludes = myMixes.target().exclude
                     console.log(includes, excludes)
-                    includes.forEach(ing =>{
-                       $(ing.split(' ').join('-')).toggleClass('included',true)
-                       $(ing.split(' ').join('-')).toggleClass('ignored excluded',false)
+                    includes.forEach(ing => {
+                        $(ing.split(' ').join('-')).toggleClass('included', true)
+                        $(ing.split(' ').join('-')).toggleClass('ignored excluded', false)
                     })
-                    excludes.forEach(ing =>{
-                        $(ing.split(' ').join('-')).toggleClass('excluded',true)
-                        $(ing.split(' ').join('-')).toggleClass('ignored included',false)
+                    excludes.forEach(ing => {
+                        $(ing.split(' ').join('-')).toggleClass('excluded', true)
+                        $(ing.split(' ').join('-')).toggleClass('ignored included', false)
                     })
                     console.log(myMixes.selected)
                 }
@@ -407,3 +434,5 @@ $('.tgl-type').click((event) => {
 })
 $('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)
+
+getDrink()
