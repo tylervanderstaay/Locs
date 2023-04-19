@@ -156,9 +156,13 @@ let myMixes = {
                 newEl.appendTo(target)
                 newEl.css(`background-image`, `url(${pulls[results[i]].img})`)
                 newEl.click((event) => {
-                    $('main1').toggleClass('hidden')
-                    $('main2').toggleClass('hidden')
-                    console.log(event.target.dataset.did);
+                    getDrink(event.target.dataset.did);
+                    setTimeout(()=>{
+                        $('main1').toggleClass('hidden')
+                        $('main2').toggleClass('hidden')
+                    }, 1000)
+                    
+                    
                 })
             }
         },
@@ -211,10 +215,10 @@ function getIngredients() {
             .catch(err => console.error(err));
     }
 }
-function getDrink() {
+function getDrink(id) {
     const options = { method: 'GET' };
 
-    fetch('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=15346', options)
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`, options)
         .then(response => response.json())
         .then(response => {
             let ingredients = []
@@ -224,7 +228,7 @@ function getDrink() {
                     console.log(response.drinks[0][`strIngredient${i}`])
                     ingredients.push(`${response.drinks[0][`strIngredient${i}`]}-${response.drinks[0][`strMeasure${i}`]}`)
                 } else {
-                    break
+                   i=15;
                 }
             }
             $(".ingcol").empty()
@@ -434,5 +438,3 @@ $('.tgl-type').click((event) => {
 })
 $('#add-mix').click(newMix)
 $('.filter-item').click(handleFilterClick)
-
-getDrink()
